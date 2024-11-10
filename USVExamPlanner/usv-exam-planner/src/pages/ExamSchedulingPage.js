@@ -1,32 +1,51 @@
 // src/pages/ExamSchedulingPage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/ExamSchedulingPage.css'; // Importă stilurile CSS din folderul styles
 
 function ExamSchedulingPage() {
   const navigate = useNavigate();
 
   const goToHome = () => {
-    // Navighează înapoi la Home
     navigate('/home');
   };
 
   return (
-    <div>
+    <div className="scheduling-container">
       <h2>Schedule an Exam</h2>
-      <p>Choose a date and time to schedule your exam.</p>
-      {/* Formularul de programare examen */}
-      <form>
-        <label htmlFor="exam-date">Select Exam Date:</label>
-        <input type="date" id="exam-date" name="exam-date" required />
-        
-        <label htmlFor="exam-time">Select Exam Time:</label>
-        <input type="time" id="exam-time" name="exam-time" required />
-        
-        <button type="submit">Schedule Exam</button>
+      <p>Choose your exam details below.</p>
+
+      {/* Formular pentru Scheduling */}
+      <form className="scheduling-form">
+        <label htmlFor="exam-type">Exam Type:</label>
+        <select id="exam-type" name="exam-type">
+          <option value="math">Math</option>
+          <option value="science">Science</option>
+          <option value="history">History</option>
+        </select>
+
+        <label htmlFor="professor">Select Professor:</label>
+        <select id="professor" name="professor">
+          <option value="prof-a">Prof. A</option>
+          <option value="prof-b">Prof. B</option>
+          <option value="prof-c">Prof. C</option>
+          <option value="prof-d">Prof. D</option>
+          <option value="prof-e">Prof. E</option>
+        </select>
+
+        <label htmlFor="date">Date:</label>
+        <input type="date" id="date" name="date" />
+
+        <label htmlFor="time">Time:</label>
+        <input type="time" id="time" name="time" />
+
+        <button type="button">Schedule</button>
       </form>
 
-      {/* Buton pentru a merge înapoi la Home */}
-      <button onClick={goToHome}>Go to Home</button>
+      {/* Butoane de navigare */}
+      <div className="scheduling-buttons">
+        <button onClick={goToHome}>Go to Home</button>
+      </div>
     </div>
   );
 }

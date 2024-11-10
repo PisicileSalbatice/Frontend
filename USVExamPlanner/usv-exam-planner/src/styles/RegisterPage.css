@@ -1,0 +1,38 @@
+/* src/styles/RegisterPage.css */
+
+.register-container {
+    max-width: 400px;         /* Setează o lățime maximă pentru centrul paginii */
+    margin: 0 auto;           /* Centrează containerul pe orizontală */
+    padding: 20px;            /* Adaugă padding pentru aspect */
+    text-align: center;       /* Aliniază textul pe centrul paginii */
+  }
+  
+  .register-form {
+    display: flex;            /* Setează form-ul pentru layout pe verticală */
+    flex-direction: column;   /* Așează elementele în coloană */
+    gap: 10px;                /* Spațiere între câmpurile formularului */
+  }
+  
+  .register-form label {
+    text-align: left;         /* Aliniază textul etichetelor la stânga */
+    margin-bottom: 5px;       /* Spațiere sub etichete */
+    font-weight: bold;        /* Face textul etichetelor mai vizibil */
+  }
+  
+  .register-buttons {
+    margin-top: 20px;         /* Adaugă spațiu între formular și butoane */
+    display: flex;            /* Așează butoanele unul lângă altul */
+    justify-content: space-between; /* Spațiu egal între butoane */
+  }
+  
+  .register-form input {
+    padding: 8px;             /* Adaugă padding pentru input */
+    font-size: 16px;          /* Dimensiune confortabilă pentru text */
+  }
+  
+  button {
+    padding: 10px 20px;       /* Dimensiunea butoanelor */
+    font-size: 16px;          /* Mărimea textului pentru vizibilitate */
+    cursor: pointer;          /* Cursor pointer pentru butoane */
+  }
+  
