@@ -1,38 +1,101 @@
 /* src/styles/LoginPage.css */
 
-.login-container {
-    max-width: 400px;         /* Setează o lățime maximă pentru centrul paginii */
-    margin: 0 auto;           /* Centrează containerul pe orizontală */
-    padding: 20px;            /* Adaugă padding pentru aspect */
-    text-align: center;       /* Aliniază textul pe centrul paginii */
-  }
-  
-  .login-form {
-    display: flex;            /* Setează form-ul pentru layout pe verticală */
-    flex-direction: column;   /* Așează elementele în coloană */
-    gap: 10px;                /* Spațiere între câmpurile formularului */
-  }
-  
-  .login-form label {
-    text-align: left;         /* Aliniază textul etichetelor la stânga */
-    margin-bottom: 5px;       /* Spațiere sub etichete */
-    font-weight: bold;        /* Face textul etichetelor mai vizibil */
-  }
-  
-  .login-buttons {
-    margin-top: 20px;         /* Adaugă spațiu între formular și butoane */
-    display: flex;            /* Așează butoanele unul lângă altul */
-    justify-content: space-between; /* Spațiu egal între butoane */
-  }
-  
-  .login-form input {
-    padding: 8px;             /* Adaugă padding pentru input */
-    font-size: 16px;          /* Dimensiune confortabilă pentru text */
-  }
-  
-  button {
-    padding: 10px 20px;       /* Dimensiunea butoanelor */
-    font-size: 16px;          /* Mărimea textului pentru vizibilitate */
-    cursor: pointer;          /* Cursor pointer pentru butoane */
-  }
-  
+/* Stil pentru pagina principală de login */
+.login-page {
+  display: flex; /* Afișează elementele în mod flexibil */
+  flex-direction: column; /* Aranjează elementele pe verticală */
+  align-items: center; /* Aliniază elementele la centru pe orizontală */
+  min-height: 100vh; /* Înălțime minimă de 100% din viewport */
+  font-family: Arial, sans-serif; /* Fontul principal */
+  background-color: #f5f5f5; /* Fundalul paginii */
+}
+
+/* Stil pentru antetul paginii */
+.login-header {
+  background-color: #5078d4; /* Fundal albastru */
+  color: white; /* Text alb */
+  text-align: center; /* Text centrat */
+  padding: 20px; /* Spațiere internă */
+  width: 100%; /* Lățime completă */
+}
+
+.login-header h1 {
+  margin: 0; /* Elimină marginile */
+  font-size: 2em; /* Dimensiune mare a fontului */
+}
+
+.login-header p {
+  margin: 5px 0; /* Spațiu între paragrafe */
+}
+
+/* Conținutul principal al paginii de login */
+.login-content {
+  display: flex; /* Flexbox pentru aranjare */
+  justify-content: center; /* Centrează conținutul pe orizontală */
+  align-items: flex-start; /* Aliniază elementele la început pe verticală */
+  padding: 40px; /* Spațiere internă */
+  width: 100%; /* Lățime completă */
+}
+
+/* Stil pentru containerul formularului de login */
+.login-form-container {
+  background-color: white; /* Fundal alb */
+  padding: 30px; /* Spațiere internă */
+  border-radius: 8px; /* Colțuri rotunjite */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Umbra containerului */
+  max-width: 400px; /* Lățime maximă */
+  width: 100%; /* Lățime completă */
+}
+
+.login-form-container h2 {
+  margin-bottom: 10px; /* Spațiu sub titlu */
+  font-weight: bold; /* Font îngroșat */
+}
+
+.login-form-container p {
+  margin-bottom: 20px; /* Spațiu sub paragraf */
+}
+
+/* Stil pentru formularul de login */
+.login-form {
+  display: flex; /* Flexbox pentru aranjare verticală */
+  flex-direction: column; /* Aranjare pe verticală */
+}
+
+.login-form label {
+  margin-bottom: 5px; /* Spațiu sub etichetă */
+}
+
+.login-form input {
+  margin-bottom: 15px; /* Spațiu sub câmpul de input */
+  padding: 10px; /* Spațiere internă */
+  border-radius: 4px; /* Colțuri rotunjite */
+  border: 1px solid #ccc; /* Bordură gri deschis */
+}
+
+/* Stil pentru butonul de submit */
+.submit-button {
+  background-color: #000; /* Fundal negru */
+  color: white; /* Text alb */
+  padding: 10px; /* Spațiere internă */
+  border: none; /* Elimină bordura */
+  border-radius: 4px; /* Colțuri rotunjite */
+  cursor: pointer; /* Cursor pointer la hover */
+}
+
+.submit-button:hover {
+  background-color: #333; /* Fundal mai închis la hover */
+}
+
+/* Stil pentru footer-ul paginii */
+.login-footer {
+  margin-top: auto; /* Poziționează footer-ul la finalul paginii */
+  text-align: center; /* Text centrat */
+  padding: 20px; /* Spațiere internă */
+  background-color: #f5f5f5; /* Fundal gri deschis */
+}
+
+.login-footer p {
+  font-size: 0.9em; /* Dimensiune mică a fontului */
+  color: #888; /* Text gri */
+}
