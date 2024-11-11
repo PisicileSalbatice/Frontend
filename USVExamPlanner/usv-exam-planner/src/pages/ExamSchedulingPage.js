@@ -1,4 +1,3 @@
-// src/pages/ExamSchedulingPage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ExamSchedulingPage.css'; // Importă stilurile CSS din folderul styles
@@ -6,45 +5,55 @@ import '../styles/ExamSchedulingPage.css'; // Importă stilurile CSS din folderu
 function ExamSchedulingPage() {
   const navigate = useNavigate();
 
-  const goToHome = () => {
-    navigate('/home');
-  };
-
   return (
     <div className="scheduling-container">
-      <h2>Schedule an Exam</h2>
-      <p>Choose your exam details below.</p>
+      <h1>Exam Schedule Request Form</h1>
+      <p>Please fill out the following details to request an exam schedule</p>
 
-      {/* Formular pentru Scheduling */}
+      {/* Form for Scheduling */}
       <form className="scheduling-form">
-        <label htmlFor="exam-type">Exam Type:</label>
-        <select id="exam-type" name="exam-type">
-          <option value="math">Math</option>
-          <option value="science">Science</option>
-          <option value="history">History</option>
-        </select>
+        <div className="input-group">
+          <label htmlFor="professor">Professor</label>
+          <select id="professor" name="professor" className="dropdown">
+            <option value="">Select a professor</option>
+            <option value="prof-a">Prof. A</option>
+            <option value="prof-b">Prof. B</option>
+            <option value="prof-c">Prof. C</option>
+            <option value="prof-d">Prof. D</option>
+            <option value="prof-e">Prof. E</option>
+          </select>
+        </div>
 
-        <label htmlFor="professor">Select Professor:</label>
-        <select id="professor" name="professor">
-          <option value="prof-a">Prof. A</option>
-          <option value="prof-b">Prof. B</option>
-          <option value="prof-c">Prof. C</option>
-          <option value="prof-d">Prof. D</option>
-          <option value="prof-e">Prof. E</option>
-        </select>
+        <div className="input-row">
+          <div className="input-group">
+            <label htmlFor="date">Date</label>
+            <input type="date" id="date" name="date" placeholder="Select date from calendar" />
+          </div>
+          <div className="input-group">
+            <label htmlFor="classroom">Classroom</label>
+            <input type="text" id="classroom" name="classroom" placeholder="Enter your classroom" />
+          </div>
+        </div>
 
-        <label htmlFor="date">Date:</label>
-        <input type="date" id="date" name="date" />
+        <div className="input-row">
+          <div className="input-group">
+            <label htmlFor="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="Enter the subject" />
+          </div>
+          <div className="input-group">
+            <label htmlFor="time">Time</label>
+            <input type="time" id="time" name="time" placeholder="Enter the time" />
+          </div>
+        </div>
 
-        <label htmlFor="time">Time:</label>
-        <input type="time" id="time" name="time" />
-
-        <button type="button">Schedule</button>
+        <div className="button-row">
+          <button type="submit" className="submit-btn">Submit</button>
+          <button type="reset" className="reset-btn">Reset</button>
+        </div>
       </form>
 
-      {/* Butoane de navigare */}
-      <div className="scheduling-buttons">
-        <button onClick={goToHome}>Go to Home</button>
+      <div className="confirmation">
+        <p>Your request has been successfully submitted. Thank you!</p>
       </div>
     </div>
   );

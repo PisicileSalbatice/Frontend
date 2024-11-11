@@ -1,39 +1,105 @@
-/* src/styles/SchedulingPage.css */
-
+/* Main container styling */
 .scheduling-container {
-    max-width: 400px;         /* Setează o lățime maximă pentru centrul paginii */
-    margin: 0 auto;           /* Centrează containerul pe orizontală */
-    padding: 20px;            /* Adaugă padding pentru aspect */
-    text-align: center;       /* Aliniază textul pe centrul paginii */
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: #a7c4ff;
+  border-radius: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+.scheduling-container h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.scheduling-container p {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+/* Form styling */
+.scheduling-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #fff;
+}
+
+.input-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  width: 100%;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.submit-btn, .reset-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+}
+
+.reset-btn {
+  background-color: #fff;
+  color: #000;
+  border: none;
+}
+
+.confirmation {
+  background-color: #8a97c2;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .scheduling-container {
+      padding: 20px;
   }
-  
-  .scheduling-form {
-    display: flex;            /* Setează form-ul pentru layout pe verticală */
-    flex-direction: column;   /* Așează elementele în coloană */
-    gap: 10px;                /* Spațiere între câmpurile formularului */
+
+  .input-row {
+      flex-direction: column;
+      gap: 10px;
   }
-  
-  .scheduling-form label {
-    text-align: left;         /* Aliniază textul etichetelor la stânga */
-    margin-bottom: 5px;       /* Spațiere sub etichete */
-    font-weight: bold;        /* Face textul etichetelor mai vizibil */
+
+  .button-row {
+      flex-direction: column;
+      gap: 10px;
   }
-  
-  .scheduling-buttons {
-    margin-top: 20px;         /* Adaugă spațiu între formular și butoane */
-    display: flex;            /* Așează butoanele unul lângă altul */
-    justify-content: space-between; /* Spațiu egal între butoane */
+
+  .submit-btn, .reset-btn {
+      width: 100%;
   }
-  
-  .scheduling-form input,
-  .scheduling-form select {
-    padding: 8px;             /* Adaugă padding pentru input și select */
-    font-size: 16px;          /* Dimensiune confortabilă pentru text */
-  }
-  
-  button {
-    padding: 10px 20px;       /* Dimensiunea butoanelor */
-    font-size: 16px;          /* Mărimea textului pentru vizibilitate */
-    cursor: pointer;          /* Cursor pointer pentru butoane */
-  }
-  
+}
