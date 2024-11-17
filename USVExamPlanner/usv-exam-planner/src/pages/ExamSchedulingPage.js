@@ -1,50 +1,70 @@
-// src/pages/ExamSchedulingPage.js
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/ExamSchedulingPage.css'; // Importă stilurile CSS din folderul styles
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../styles/ExamSchedulingPage.css';
 
 function ExamSchedulingPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const goToHome = () => {
-    navigate('/home');
-  };
+  const [selectedDate, setSelectedDate] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const date = params.get('date'); // Preluăm data din query param
+    if (date) {
+      // Corectăm data pentru a evita diferența de fus orar
+      const correctedDate = new Date(date);
+      correctedDate.setMinutes(correctedDate.getMinutes() - correctedDate.getTimezoneOffset()); // Ajustăm pentru a elimina diferența de fus orar
+      const formattedDate = correctedDate.toISOString().split('T')[0]; // Formatează data ca YYYY-MM-DD
+      setSelectedDate(formattedDate); // Setează data corectă
+    }
+  }, [location.search]);
 
   return (
-    <div className="scheduling-container">
-      <h2>Schedule an Exam</h2>
-      <p>Choose your exam details below.</p>
+    <div className="exam-scheduling-page">
+      <header>
+        <h1>Exam Schedule Request</h1>
+        <nav>
+          <button onClick={() => navigate('/home')}>Home</button>
+        </nav>
+      </header>
 
-      {/* Formular pentru Scheduling */}
-      <form className="scheduling-form">
-        <label htmlFor="exam-type">Exam Type:</label>
-        <select id="exam-type" name="exam-type">
-          <option value="math">Math</option>
-          <option value="science">Science</option>
-          <option value="history">History</option>
-        </select>
+      <div className="form-container">
+        <h2>Exam Scheduling Form</h2>
+        <form>
+          <label>
+            Date:
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+          </label>
 
-        <label htmlFor="professor">Select Professor:</label>
-        <select id="professor" name="professor">
-          <option value="prof-a">Prof. A</option>
-          <option value="prof-b">Prof. B</option>
-          <option value="prof-c">Prof. C</option>
-          <option value="prof-d">Prof. D</option>
-          <option value="prof-e">Prof. E</option>
-        </select>
+          <label>
+            Classroom:
+            <input type="text" placeholder="Enter classroom" />
+          </label>
 
-        <label htmlFor="date">Date:</label>
-        <input type="date" id="date" name="date" />
+          <label>
+            Subject:
+            <input type="text" placeholder="Enter subject" />
+          </label>
 
-        <label htmlFor="time">Time:</label>
-        <input type="time" id="time" name="time" />
+          <label>
+            Professor:
+            <select>
+              <option value="ProfA">Prof A</option>
+              <option value="ProfB">Prof B</option>
+              <option value="ProfC">Prof C</option>
+            </select>
+          </label>
 
-        <button type="button">Schedule</button>
-      </form>
-
-      {/* Butoane de navigare */}
-      <div className="scheduling-buttons">
-        <button onClick={goToHome}>Go to Home</button>
+          <div className="form-buttons">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+          </div>
+        </form>
       </div>
     </div>
   );
