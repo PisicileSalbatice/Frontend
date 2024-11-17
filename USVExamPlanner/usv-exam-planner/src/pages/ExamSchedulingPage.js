@@ -1,59 +1,70 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/ExamSchedulingPage.css'; // Importă stilurile CSS din folderul styles
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import '../styles/ExamSchedulingPage.css';
 
 function ExamSchedulingPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [selectedDate, setSelectedDate] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const date = params.get('date'); // Preluăm data din query param
+    if (date) {
+      // Corectăm data pentru a evita diferența de fus orar
+      const correctedDate = new Date(date);
+      correctedDate.setMinutes(correctedDate.getMinutes() - correctedDate.getTimezoneOffset()); // Ajustăm pentru a elimina diferența de fus orar
+      const formattedDate = correctedDate.toISOString().split('T')[0]; // Formatează data ca YYYY-MM-DD
+      setSelectedDate(formattedDate); // Setează data corectă
+    }
+  }, [location.search]);
 
   return (
-    <div className="scheduling-container">
-      <h1>Exam Schedule Request Form</h1>
-      <p>Please fill out the following details to request an exam schedule</p>
+    <div className="exam-scheduling-page">
+      <header>
+        <h1>Exam Schedule Request</h1>
+        <nav>
+          <button onClick={() => navigate('/home')}>Home</button>
+        </nav>
+      </header>
 
-      {/* Form for Scheduling */}
-      <form className="scheduling-form">
-        <div className="input-group">
-          <label htmlFor="professor">Professor</label>
-          <select id="professor" name="professor" className="dropdown">
-            <option value="">Select a professor</option>
-            <option value="prof-a">Prof. A</option>
-            <option value="prof-b">Prof. B</option>
-            <option value="prof-c">Prof. C</option>
-            <option value="prof-d">Prof. D</option>
-            <option value="prof-e">Prof. E</option>
-          </select>
-        </div>
+      <div className="form-container">
+        <h2>Exam Scheduling Form</h2>
+        <form>
+          <label>
+            Date:
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+          </label>
 
-        <div className="input-row">
-          <div className="input-group">
-            <label htmlFor="date">Date</label>
-            <input type="date" id="date" name="date" placeholder="Select date from calendar" />
+          <label>
+            Classroom:
+            <input type="text" placeholder="Enter classroom" />
+          </label>
+
+          <label>
+            Subject:
+            <input type="text" placeholder="Enter subject" />
+          </label>
+
+          <label>
+            Professor:
+            <select>
+              <option value="ProfA">Prof A</option>
+              <option value="ProfB">Prof B</option>
+              <option value="ProfC">Prof C</option>
+            </select>
+          </label>
+
+          <div className="form-buttons">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
           </div>
-          <div className="input-group">
-            <label htmlFor="classroom">Classroom</label>
-            <input type="text" id="classroom" name="classroom" placeholder="Enter your classroom" />
-          </div>
-        </div>
-
-        <div className="input-row">
-          <div className="input-group">
-            <label htmlFor="subject">Subject</label>
-            <input type="text" id="subject" name="subject" placeholder="Enter the subject" />
-          </div>
-          <div className="input-group">
-            <label htmlFor="time">Time</label>
-            <input type="time" id="time" name="time" placeholder="Enter the time" />
-          </div>
-        </div>
-
-        <div className="button-row">
-          <button type="submit" className="submit-btn">Submit</button>
-          <button type="reset" className="reset-btn">Reset</button>
-        </div>
-      </form>
-
-      <div className="confirmation">
-        <p>Your request has been successfully submitted. Thank you!</p>
+        </form>
       </div>
     </div>
   );
