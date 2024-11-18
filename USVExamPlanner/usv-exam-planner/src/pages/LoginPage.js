@@ -1,7 +1,6 @@
-// src/pages/LoginPage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/LoginPage.css'; // Importă stilurile CSS din folderul styles
+import '../styles/LoginPage.css'; // Importă stilurile CSS
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -10,31 +9,40 @@ function LoginPage() {
     navigate('/register');
   };
 
-  const goToHome = () => {
-    navigate('/home');
-  };
-
   return (
-    <div className="login-container">
-      <h2>Login Page</h2>
-      <p>Log into your account or choose an option below.</p>
+    <div className="login-page">
+      {/* Antet */}
+      <header className="header">
+        <h1>USV Exam Planner</h1>
+        <nav className="nav-links">
+          <button onClick={() => navigate('/home')}>Home</button>
+          <button onClick={goToRegister}>Register</button>
+        </nav>
+      </header>
 
-      {/* Formular pentru Login */}
-      <form className="login-form">
-        <label htmlFor="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Enter username" />
-
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Enter password" />
-
-        <button type="button">Login</button>
-      </form>
-
-      {/* Butoane de navigare */}
-      <div className="login-buttons">
-        <button onClick={goToHome}>Go to Home</button>
-        <button onClick={goToRegister}>Go to Register</button>
+      {/* Secțiunea principală */}
+      <div className="main-section">
+        <div className="welcome-banner">
+          <h2>Welcome to USV Exam Planner</h2>
+          <p>Login to access your account</p>
+        </div>
+        <div className="login-form-container">
+          <form className="login-form">
+            <h3>Login Form</h3>
+            <p>Enter your login credentials</p>
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" />
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className="footer">
+        <p>© 2024 Universitatea Ștefan cel Mare Suceava</p>
+      </footer>
     </div>
   );
 }

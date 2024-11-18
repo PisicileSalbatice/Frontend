@@ -1,0 +1,185 @@
+/* Stiluri generale */
+.home-page {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Antet */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .nav-links button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    text-decoration: underline;
+  }
+  
+  .search-bar input {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  /* Banner principal */
+  .banner {
+    text-align: center;
+    background-color: #e0e7ff;
+    padding: 20px;
+  }
+  
+  .banner h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .banner p {
+    font-size: 16px;
+    color: gray;
+  }
+  
+  /* Calendar */
+  .calendar-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .calendar {
+    margin: 0 auto;
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  
+  .day {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer; /* Adăugat pentru a schimba cursorul la hover */
+  }
+  
+  .day.pending {
+    background-color: #cfe2ff; /* Albastru */
+  }
+  
+  .day.declined {
+    background-color: #f8d7da; /* Roșu */
+  }
+  
+  .day.approved {
+    background-color: #212529; /* Negru */
+    color: white;
+  }
+  /* Legenda */
+  .legend {
+    margin-top: 20px;
+  }
+  
+  .legend-item {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .legend-item.pending {
+    background-color: #cfe2ff;
+  }
+  
+  .legend-item.declined {
+    background-color: #f8d7da;
+  }
+  
+  .legend-item.approved {
+    background-color: #212529;
+    color: white;
+  }
+  
+  /* Requests */
+  .requests-section {
+    padding: 20px;
+    background-color: white;
+  }
+  
+  .request-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .approve-button {
+    background-color: black;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .decline-button {
+    background-color: white;
+    color: black;
+    padding: 5px 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+  
+  .more-requests-button {
+    margin-top: 10px;
+    background-color: blue;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    font-size: 14px;
+  }
+  /* Adăugăm stiluri pentru butoanele Login și Register */
+.header .nav-links button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+    text-decoration: underline;
+  }
+  
+  /* Adăugăm un hover pentru butoanele Login și Register */
+  .header .nav-links button:hover {
+    color: darkblue;
+  }

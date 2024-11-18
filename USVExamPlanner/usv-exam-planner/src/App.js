@@ -1,36 +1,32 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import HomePage from './pages/HomePage';
 import RequestsPage from './pages/RequestsPage';
 import RequestApprovalPage from './pages/RequestApprovalPage';
-import ExamSchedulingPage from './pages/ExamSchedulingPage'; // Importă ExamSchedulingPage
+import ExamSchedulingPage from './pages/ExamSchedulingPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Ruta pentru Login */}
-        <Route path="/login" element={<LoginPage />} />
-        
-        {/* Ruta pentru Register */}
-        <Route path="/register" element={<RegisterPage />} />
-        
-        {/* Ruta pentru Home */}
+        {/* Ruta pentru pagina de Home */}
         <Route path="/home" element={<HomePage />} />
         
-        {/* Ruta pentru Requests */}
-        <Route path="/requests" element={<RequestsPage />} />
+        {/* Rutele pentru Login și Register */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         
-        {/* Ruta pentru RequestApproval */}
+        {/* Rutele pentru Requests și Request Approval */}
+        <Route path="/requests" element={<RequestsPage />} />
         <Route path="/request-approval" element={<RequestApprovalPage />} />
         
-        {/* Ruta pentru programare examen */}
+        {/* Ruta pentru programarea examenelor */}
         <Route path="/exam-scheduling" element={<ExamSchedulingPage />} />
-        
-        {/* Ruta implicită care te redirecționează la login */}
-        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* Redirecționare implicită către HomePage */}
+        <Route path="/" element={<HomePage />} />
       </Routes>
     </Router>
   );

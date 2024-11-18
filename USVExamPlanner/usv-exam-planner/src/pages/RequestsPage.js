@@ -1,26 +1,117 @@
-// src/pages/RequestsPage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/RequestsPage.css'; // Import the CSS file
 
 function RequestsPage() {
   const navigate = useNavigate();
 
-  const goToApproval = () => {
-    // Navighează către pagina de aprobare a cererii
-    navigate('/request-approval');
+  const goToApprovalPage = (action) => {
+    // Navigate to the RequestApprovalPage with the action as a query parameter
+    navigate(`/request-approval?action=${action}`);
   };
 
   const goToHome = () => {
-    // Navighează către pagina Home
     navigate('/home');
   };
 
+  const goToProfile = () => {
+    navigate('/profile');
+  };
+
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
   return (
-    <div>
-      <h2>Requests Page</h2>
-      <p>Click the button below to approve or reject a request.</p>
-      <button onClick={goToApproval}>Go to Request Approval</button> {/* Butonul pentru a merge la aprobarea cererii */}
-      <button onClick={goToHome}>Go to Home</button> {/* Butonul pentru a merge la Home */}
+    <div className="requests-page">
+      {/* Header */}
+      <header className="header">
+        <h1>Exam Planner Requests</h1>
+        <div className="nav-buttons">
+          <button onClick={goToHome}>Home</button>
+          <button onClick={goToProfile}>Profile</button>
+        </div>
+      </header>
+
+      {/* Requests Section */}
+      <div className="requests-section">
+        <h2>Student Requests</h2>
+        <p>View and manage all student exam planner requests</p>
+
+        {/* Request Items */}
+        <div className="request-item">
+          <div className="request-details">
+            <div className="student-info">
+              <div className="student-avatar"></div>
+              <div className="student-name">
+                <p><strong>John Doe</strong></p>
+                <p>Math Exam - Group 3143b</p>
+                <p>02/15/2024 | 15:00-17:00</p>
+              </div>
+            </div>
+            <div className="request-actions">
+              <button
+                className="reject-button"
+                onClick={() => goToApprovalPage('reject')}
+              >
+                Reject
+              </button>
+              <button
+                className="approve-button"
+                onClick={() => goToApprovalPage('approve')}
+              >
+                Approve
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="request-item">
+          <div className="request-details">
+            <div className="student-info">
+              <div className="student-avatar"></div>
+              <div className="student-name">
+                <p><strong>Jane Smith</strong></p>
+                <p>Science Exam - Group 3143b</p>
+                <p>02/15/2024 | 12:00-14:00</p>
+              </div>
+            </div>
+            <div className="request-actions">
+              <button
+                className="reject-button"
+                onClick={() => goToApprovalPage('reject')}
+              >
+                Reject
+              </button>
+              <button
+                className="approve-button"
+                onClick={() => goToApprovalPage('approve')}
+              >
+                Approve
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* More requests button */}
+        <button className="more-requests-button">More requests</button>
+      </div>
+
+      {/* Footer Section */}
+      <footer className="footer">
+        <div className="footer-user-info">
+          <div className="user-avatar"></div>
+          <div className="user-details">
+            <p><strong>George Mahalu</strong></p>
+            <p>Science Department</p>
+            <p>Welcome to exam planner requests</p>
+          </div>
+        </div>
+        <div className="footer-actions">
+          <button onClick={handleLogout} className="logout-button">Logout</button>
+          <button onClick={goToProfile} className="view-profile-button">View Profile</button>
+        </div>
+      </footer>
     </div>
   );
 }
