@@ -1,12 +1,37 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/LoginPage.css'; // Importă stilurile CSS
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../api"; // Importă funcția login din api.js
+import "../styles/LoginPage.css"; // Importă stilurile CSS
 
 function LoginPage() {
   const navigate = useNavigate();
 
+  // State pentru email, parola și mesajele de eroare
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  // Funcția pentru trimiterea cererii de autentificare
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    console.log("Email:", email);
+    console.log("Password:", password);
+
+    try {
+        const response = await login(email, password);
+        console.log("Server response:", response);
+
+        navigate("/home");
+    } catch (err) {
+        console.error("Login error:", err.message);
+        setError(err.message || "Eroare la conectare cu serverul.");
+    }
+};
+
+
   const goToRegister = () => {
-    navigate('/register');
+    navigate("/register");
   };
 
   return (
@@ -15,7 +40,7 @@ function LoginPage() {
       <header className="header">
         <h1>USV Exam Planner</h1>
         <nav className="nav-links">
-          <button onClick={() => navigate('/home')}>Home</button>
+          <button onClick={() => navigate("/home")}>Home</button>
           <button onClick={goToRegister}>Register</button>
         </nav>
       </header>
@@ -27,13 +52,28 @@ function LoginPage() {
           <p>Login to access your account</p>
         </div>
         <div className="login-form-container">
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleLogin}>
             <h3>Login Form</h3>
             <p>Enter your login credentials</p>
+            {error && <p className="error">{error}</p>} {/* Mesaj de eroare */}
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" />
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Actualizează email-ul
+              required
+            />
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" />
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Actualizează parola
+              required
+            />
             <button type="submit">Submit</button>
           </form>
         </div>

@@ -6,7 +6,7 @@ function HomePage() {
   const navigate = useNavigate();
 
   const handleDayClick = (day) => {
-    const date = new Date(2025, 0, day); // Generăm data pe baza zilei (luna: ianuarie 2025)
+    const date = new Date(2025, 0, day+1); // Generăm data pe baza zilei (luna: ianuarie 2025)
     const formattedDate = date.toISOString().split('T')[0]; // Formatăm data ca "YYYY-MM-DD"
     navigate(`/exam-scheduling?date=${formattedDate}`); // Navigăm la ExamSchedulingPage cu data ca query param
   };
@@ -90,7 +90,7 @@ function HomePage() {
         <div className="request-item">
           <p><strong>Pascut Aurelia</strong></p>
           <p>Math Exam - Group 3143b</p>
-          <p>04/01/2024 | 15:00-17:00</p>
+          <p>04/01/2025 | 15:00-17:00</p>
           <button onClick={handleApproval} className="approve-button">Approve</button>
           <button onClick={handleApproval} className="decline-button">Reject</button>
         </div>
@@ -98,7 +98,7 @@ function HomePage() {
         <div className="request-item">
           <p><strong>Rotaru Aurelian</strong></p>
           <p>Science Exam - Group 3143b</p>
-          <p>13/01/2024 | 12:00-14:00</p>
+          <p>13/01/2025 | 12:00-14:00</p>
           <button onClick={handleApproval} className="approve-button">Approve</button>
           <button onClick={handleApproval} className="decline-button">Reject</button>
         </div>
@@ -108,7 +108,7 @@ function HomePage() {
 
       {/* Footer */}
       <footer className="footer">
-        <p>© 2024 USV Exam Planner. All Rights Reserved.</p>
+        <p>© 2025 USV Exam Planner. All Rights Reserved.</p>
         <p>Contact Us: InfoUSV@gmail.com</p>
       </footer>
     </div>
