@@ -1,0 +1,250 @@
+<<<<<<< Updated upstream
+=======
+/* Stiluri generale */
+.home-page {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Antet */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav-links button {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+  text-decoration: underline;
+}
+
+.search-bar input {
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Banner principal */
+.banner {
+  text-align: center;
+  background-color: #e0e7ff;
+  padding: 20px;
+}
+
+.banner h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.banner p {
+  font-size: 16px;
+  color: gray;
+}
+
+/* Calendar */
+.calendar-section {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Calendar Header */
+.calendar-section .calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-section select {
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calendar-section select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Textul lunii și anului */
+.calendar-section h3 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Stiluri pentru calendar (zile) */
+.calendar {
+  margin: 0 auto;
+  max-width: 600px;
+  text-align: center;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.day {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  padding: 10px;
+  background-color: #fff;
+}
+
+.day:hover {
+  background-color: #007bff;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.day.pending {
+  background-color: #cfe2ff; /* Albastru */
+}
+
+.day.declined {
+  background-color: #f8d7da; /* Roșu */
+}
+
+.day.approved {
+  background-color: #212529; /* Negru */
+  color: white;
+}
+
+/* Legenda */
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.legend-item {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.legend-item.pending {
+  background-color: #cfe2ff;
+}
+
+.legend-item.declined {
+  background-color: #f8d7da;
+}
+
+.legend-item.approved {
+  background-color: #212529;
+  color: white;
+}
+
+/* Stiluri pentru butoane din calendar (lună și an) */
+.calendar-section .calendar-header select {
+  font-size: 16px;
+  color: #333;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar-section .calendar-header select:hover {
+  background-color: #e0e7ff; /* Albastru deschis pentru hover */
+}
+
+.calendar-section .calendar-header select:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Stiluri pentru butoane generale */
+.header .nav-links button {
+  background-color: #007bff; /* Albastru */
+  color: white; /* Text alb */
+  font-size: 14px; /* Dimensiune font mai mică */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px; /* Colțuri rotunjite mai subtile */
+  padding: 8px 12px; /* Dimensiune mai mică */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none; /* Eliminăm sublinierea */
+  margin: 0 5px; /* Spațiere între butoane */
+}
+
+.header .nav-links button:hover {
+  background-color: #0056b3; /* Albastru închis */
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2); /* Umbră pe hover */
+  transform: translateY(-1px); /* Ușoară mișcare în sus */
+}
+
+/* Stiluri pentru butoanele din secțiunea Requests */
+.requests-section .approve-button,
+.requests-section .decline-button,
+.requests-section .more-requests-button {
+  background-color: #007bff; /* Albastru pentru toate */
+  color: white; /* Text alb */
+  font-size: 13px; /* Font mai mic */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px; /* Margini rotunjite mai subtile */
+  padding: 6px 10px; /* Dimensiune mai mică */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin: 5px; /* Spațiere între butoane */
+}
+
+.requests-section .approve-button:hover,
+.requests-section .decline-button:hover,
+.requests-section .more-requests-button:hover {
+  background-color: #0056b3; /* Albastru închis */
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2); /* Umbră pe hover */
+  transform: translateY(-1px); /* Ușoară mișcare în sus */
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  font-size: 14px;
+}
+>>>>>>> Stashed changes

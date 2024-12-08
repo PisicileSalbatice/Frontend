@@ -29,19 +29,23 @@ header h1 {
 }
 
 header nav button {
-  background: none;
-  border: none;
-  color: #007bff;
+  background-color: #007bff; /* Albastru */
+  color: #fff; /* Alb pentru text */
   font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px; /* Margini rotunjite */
+  padding: 10px 20px;
   cursor: pointer;
-  margin-left: 15px;
-  text-decoration: underline;
+  transition: all 0.3s ease-in-out;
 }
 
 header nav button:hover {
-  text-decoration: none;
-  color: #0056b3;
+  background-color: #0056b3; /* Albastru mai închis pentru hover */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Umbra pe hover */
+  transform: translateY(-2px); /* Mică mișcare în sus pe hover */
 }
+
 
 /* Form Container */
 .form-container {
