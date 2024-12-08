@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Configurare instanță Axios
 const API = axios.create({
-  baseURL: "https://8f07-2a02-2f0e-f900-7c00-6843-343d-b65f-9956.ngrok-free.app", // URL generat de ngrok
+  baseURL: "https://f0aa-2a02-2f0e-f900-7c00-15ae-c7c-478f-dbc8.ngrok-free.app", // URL generat de ngrok
 });
 
 // Funcții pentru interacțiunea cu backend-ul
@@ -84,7 +84,7 @@ const deleteExamRequest = async (requestId, email, password) => {
 };
 async function login(email, password) {
     try {
-        const response = await fetch("https://8f07-2a02-2f0e-f900-7c00-6843-343d-b65f-9956.ngrok-free.app/auth/login", {
+        const response = await fetch("https://f0aa-2a02-2f0e-f900-7c00-15ae-c7c-478f-dbc8.ngrok-free.app/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

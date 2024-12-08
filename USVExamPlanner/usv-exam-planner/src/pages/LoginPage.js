@@ -30,9 +30,7 @@ function LoginPage() {
 };
 
 
-  const goToRegister = () => {
-    navigate("/register");
-  };
+  
 
   return (
     <div className="login-page">
@@ -41,7 +39,7 @@ function LoginPage() {
         <h1>USV Exam Planner</h1>
         <nav className="nav-links">
           <button onClick={() => navigate("/home")}>Home</button>
-          <button onClick={goToRegister}>Register</button>
+         
         </nav>
       </header>
 
