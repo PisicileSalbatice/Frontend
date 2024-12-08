@@ -1,42 +1,35 @@
-<<<<<<< Updated upstream
-// src/pages/HomePage.js
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-=======
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext"; // Importă contextul de autentificare
 import "../styles/HomePage.css";
->>>>>>> Stashed changes
 
 function HomePage() {
-  const navigate = useNavigate(); // Hook-ul pentru navigare
+  const navigate = useNavigate();
+  const { isAuthenticated, logout, user } = useAuth(); // Preia starea de autentificare și funcția logout
+  const email = user?.email; // Presupunând că `user` conține emailul utilizatorului
 
-  const goToExamScheduling = () => {
-    // Navighează către pagina de programare examen
-    navigate('/exam-scheduling');
+  console.log(email); // Verifică ce email apare
+
+  // Verificăm dacă emailul se termină cu @student.usv.ro
+  const isStudentEmail = email && email.toLowerCase().endsWith("@student.usv.ro");
+
+  const handleLogout = () => {
+    logout(); // Dezautentifică utilizatorul
+    navigate("/login"); // Navighează la pagina de Login
   };
 
-<<<<<<< Updated upstream
-  const goToRequests = () => {
-    // Navighează către pagina de Requests
-    navigate('/requests');
-=======
   const handleDayClick = (day) => {
     const date = new Date(year, month, day);
     const formattedDate = date.toISOString().split("T")[0]; // Formatăm data ca "YYYY-MM-DD"
     navigate(`/exam-scheduling?date=${formattedDate}`); // Navigăm la ExamSchedulingPage cu data ca query param
->>>>>>> Stashed changes
   };
 
-  const goToLogin = () => {
-    // Navighează către pagina de Login
-    navigate('/login');
+  const handleApproval = () => {
+    navigate("/request-approval");
   };
 
-  const goToRegister = () => {
-    // Navighează către pagina de Register
-    navigate('/register');
+  const handleMoreRequests = () => {
+    navigate("/requests"); // Navighează la RequestsPage
   };
 
   // State pentru luna selectată
@@ -59,45 +52,43 @@ function HomePage() {
 
   // Generarea zilelor calendarului
   const generateDays = () => {
-  const firstDay = getFirstDayOfMonth(); // Ziua săptămânii în care începe luna
-  const daysInMonth = new Date(year, month + 1, 0).getDate(); // Numărul de zile din luna curentă
-  const daysArray = [];
+    const firstDay = getFirstDayOfMonth(); // Ziua săptămânii în care începe luna
+    const daysInMonth = new Date(year, month + 1, 0).getDate(); // Numărul de zile din luna curentă
+    const daysArray = [];
 
-  // Adaugă zilele din luna anterioară dacă este necesar pentru completarea săptămânii
-  const prevMonthDays = new Date(year, month, 0).getDate(); // Ultima zi a lunii anterioare
-  let prevMonthDay = prevMonthDays - firstDay + 1; // Ziua în care să începem
+    // Adaugă zilele din luna anterioară dacă este necesar pentru completarea săptămânii
+    const prevMonthDays = new Date(year, month, 0).getDate(); // Ultima zi a lunii anterioare
+    let prevMonthDay = prevMonthDays - firstDay + 1; // Ziua în care să începem
 
-  // Adăugăm zile din luna precedentă
-  for (let i = firstDay; i > 0; i--) {
-    daysArray.push({
-      day: prevMonthDay,
-      isCurrentMonth: false,
-    });
-    prevMonthDay++;
-  }
+    // Adăugăm zile din luna precedentă
+    for (let i = firstDay; i > 0; i--) {
+      daysArray.push({
+        day: prevMonthDay,
+        isCurrentMonth: false,
+      });
+      prevMonthDay++;
+    }
 
-  // Adăugăm zilele din luna curentă
-  for (let i = 1; i <= daysInMonth; i++) {
-    daysArray.push({
-      day: i,
-      isCurrentMonth: true,
-    });
-  }
+    // Adăugăm zilele din luna curentă
+    for (let i = 1; i <= daysInMonth; i++) {
+      daysArray.push({
+        day: i,
+        isCurrentMonth: true,
+      });
+    }
 
-  // Adăugăm zilele din luna următoare pentru completarea săptămânii
-  let nextMonthDay = 1;
-  const totalDaysInCalendar = daysArray.length;
-  while (totalDaysInCalendar % 7 !== 0) {
-    daysArray.push({
-      day: nextMonthDay,
-      isCurrentMonth: false,
-    });
-    nextMonthDay++;
-  }
+    // Adăugăm zilele din luna următoare pentru completarea săptămânii
+    const totalDaysInCalendar = daysArray.length;
+    while (totalDaysInCalendar % 7 !== 0) {
+      daysArray.push({
+        day: i,
+        isCurrentMonth: false,
+      });
+      i++;
+    }
 
-  return daysArray;
-};
-
+    return daysArray;
+  };
 
   // Navigare între luni
   const handleNextMonth = () => {
@@ -119,15 +110,6 @@ function HomePage() {
   };
 
   return (
-<<<<<<< Updated upstream
-    <div>
-      <h2>Welcome to the Home Page!</h2>
-      <p>This is the home page.</p>
-      <button onClick={goToExamScheduling}>Schedule Exam</button> {/* Butonul pentru programarea examenului */}
-      <button onClick={goToRequests}>Go to Requests</button> {/* Butonul pentru a merge la Requests */}
-      <button onClick={goToLogin}>Go to Login</button> {/* Butonul pentru a merge la Login */}
-      <button onClick={goToRegister}>Go to Register</button> {/* Butonul pentru a merge la Register */}
-=======
     <div className="home-page">
       {/* Antet */}
       <header className="header">
@@ -239,7 +221,6 @@ function HomePage() {
         <p>© 2025 USV Exam Planner. All Rights Reserved.</p>
         <p>Contact Us: InfoUSV@gmail.com</p>
       </footer>
->>>>>>> Stashed changes
     </div>
   );
 }

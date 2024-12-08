@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-<<<<<<< Updated upstream
-=======
 import { createExamRequest } from '../api'; 
->>>>>>> Stashed changes
 import '../styles/ExamSchedulingPage.css';
 
 function ExamSchedulingPage() {
@@ -11,29 +8,23 @@ function ExamSchedulingPage() {
   const location = useLocation();
 
   const [selectedDate, setSelectedDate] = useState('');
-<<<<<<< Updated upstream
-=======
   const [classroom, setClassroom] = useState('');
   const [subject, setSubject] = useState('');
   const [professor, setProfessor] = useState('ProfA');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
->>>>>>> Stashed changes
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const date = params.get('date'); // Preluăm data din query param
+    const date = params.get('date');
     if (date) {
-      // Corectăm data pentru a evita diferența de fus orar
       const correctedDate = new Date(date);
-      correctedDate.setMinutes(correctedDate.getMinutes() - correctedDate.getTimezoneOffset()); // Ajustăm pentru a elimina diferența de fus orar
-      const formattedDate = correctedDate.toISOString().split('T')[0]; // Formatează data ca YYYY-MM-DD
-      setSelectedDate(formattedDate); // Setează data corectă
+      correctedDate.setMinutes(correctedDate.getMinutes() - correctedDate.getTimezoneOffset());
+      const formattedDate = correctedDate.toISOString().split('T')[0];
+      setSelectedDate(formattedDate);
     }
   }, [location.search]);
 
-<<<<<<< Updated upstream
-=======
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -69,7 +60,6 @@ function ExamSchedulingPage() {
     setProfessor('ProfA');
   };
 
->>>>>>> Stashed changes
   return (
     <div className="exam-scheduling-page">
       <header>
@@ -81,13 +71,9 @@ function ExamSchedulingPage() {
 
       <div className="form-container">
         <h2>Exam Scheduling Form</h2>
-<<<<<<< Updated upstream
-        <form>
-=======
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
         <form onSubmit={handleSubmit}>
->>>>>>> Stashed changes
           <label>
             Date:
             <input
@@ -100,9 +86,6 @@ function ExamSchedulingPage() {
 
           <label>
             Classroom:
-<<<<<<< Updated upstream
-            <input type="text" placeholder="Enter classroom" />
-=======
             <input
               type="text"
               value={classroom}
@@ -110,14 +93,10 @@ function ExamSchedulingPage() {
               placeholder="Enter classroom"
               required
             />
->>>>>>> Stashed changes
           </label>
 
           <label>
             Subject:
-<<<<<<< Updated upstream
-            <input type="text" placeholder="Enter subject" />
-=======
             <input
               type="text"
               value={subject}
@@ -125,12 +104,14 @@ function ExamSchedulingPage() {
               placeholder="Enter subject"
               required
             />
->>>>>>> Stashed changes
           </label>
 
           <label>
             Professor:
-            <select>
+            <select
+              value={professor}
+              onChange={(e) => setProfessor(e.target.value)}
+            >
               <option value="ProfA">Prof A</option>
               <option value="ProfB">Prof B</option>
               <option value="ProfC">Prof C</option>
