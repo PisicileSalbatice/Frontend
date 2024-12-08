@@ -41,7 +41,7 @@ function HomePage() {
           <button onClick={() => navigate("/home")}>Home</button>
           <button onClick={() => navigate("/my-exams")}>My Exams</button>
           <button onClick={() => navigate("/exam-scheduling")}>Schedule</button>
-          <button onClick={() => navigate("/settings")}>Settings</button>
+          
           {isAuthenticated ? (
             <button onClick={handleLogout}>Logout</button>
           ) : (

@@ -1,48 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { createExamRequest } from '../api'; // Ensure you import the createExamRequest function
-import '../styles/ExamSchedulingPage.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { createExamRequest } from "../api"; // Importă funcția pentru request
+import "../styles/ExamSchedulingPage.css";
 
 function ExamSchedulingPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [selectedDate, setSelectedDate] = useState('');
-  const [classroom, setClassroom] = useState('');
-  const [subject, setSubject] = useState('');
-  const [professor, setProfessor] = useState('ProfA');
+  const [selectedDate, setSelectedDate] = useState("");
+  const [classroom, setClassroom] = useState(""); // Classroom ID
+  const [subject, setSubject] = useState("");
+  const [professor, setProfessor] = useState("1"); // Default professor ID
+  const email = "student@example.com"; // Înlocuiește cu email-ul utilizatorului autentificat
+  const password = "password123"; // Înlocuiește cu parola utilizatorului autentificat
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const date = params.get('date');
+    const date = params.get("date");
     if (date) {
       const correctedDate = new Date(date);
       correctedDate.setMinutes(correctedDate.getMinutes() - correctedDate.getTimezoneOffset());
-      const formattedDate = correctedDate.toISOString().split('T')[0];
+      const formattedDate = correctedDate.toISOString().split("T")[0];
       setSelectedDate(formattedDate);
     }
   }, [location.search]);
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const examRequest = {
-      student_id: 1, // Replace with actual student ID (probably from the auth context or user info)
-      professor_id: professor, // Use the selected professor
-      classroom_id: classroom, // Use the input classroom
-      exam_date: selectedDate, // Use the selected date
-      subject: subject, // Use the input subject
+      student_id: 1, // ID-ul studentului (modifică după caz)
+      professor_id: parseInt(professor), // ID-ul profesorului
+      classroom_id: parseInt(classroom), // ID-ul sălii
+      requested_date: selectedDate, // Data cerută în format ISO
+      subject: subject.trim(), // Materia
     };
 
     try {
-      const response = await createExamRequest(examRequest);
-      console.log('Exam request created successfully:', response);
-      // Navigate to another page or show a success message
-      navigate('/exams');
+      const response = await createExamRequest(examRequest, email, password);
+      console.log("Exam request created successfully:", response);
+      navigate("/exams");
     } catch (error) {
-      console.error('Error creating exam request:', error);
-      // Handle error (display a message, etc.)
+      console.error("Error creating exam request:", error);
+      console.error("Error details:", error.response?.data?.detail);
+      alert("Failed to create exam request. Please check the form and try again.");
     }
   };
 
@@ -51,7 +52,7 @@ function ExamSchedulingPage() {
       <header>
         <h1>Exam Schedule Request</h1>
         <nav>
-          <button onClick={() => navigate('/home')}>Home</button>
+          <button onClick={() => navigate("/home")}>Home</button>
         </nav>
       </header>
 
@@ -68,12 +69,12 @@ function ExamSchedulingPage() {
           </label>
 
           <label>
-            Classroom:
+            Classroom ID:
             <input
-              type="text"
+              type="number"
               value={classroom}
               onChange={(e) => setClassroom(e.target.value)}
-              placeholder="Enter classroom"
+              placeholder="Enter classroom ID"
             />
           </label>
 
@@ -88,14 +89,14 @@ function ExamSchedulingPage() {
           </label>
 
           <label>
-            Professor:
+            Professor ID:
             <select
               value={professor}
               onChange={(e) => setProfessor(e.target.value)}
             >
-              <option value="ProfA">Prof A</option>
-              <option value="ProfB">Prof B</option>
-              <option value="ProfC">Prof C</option>
+              <option value="1">Prof A</option>
+              <option value="2">Prof B</option>
+              <option value="3">Prof C</option>
             </select>
           </label>
 

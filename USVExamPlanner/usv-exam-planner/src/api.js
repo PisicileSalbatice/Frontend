@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Configurare instanță Axios
 const API = axios.create({
-  baseURL: "https://f0aa-2a02-2f0e-f900-7c00-15ae-c7c-478f-dbc8.ngrok-free.app", // URL generat de ngrok
+  baseURL: "https://f984-2a02-2f0e-f900-7c00-208e-d991-6c6d-48fb.ngrok-free.app", // URL generat de ngrok
 });
 
 // Funcții pentru interacțiunea cu backend-ul
@@ -52,8 +52,8 @@ const fetchStudentExams = async (email, password) => {
  */
 const createExamRequest = async (examRequest, email, password) => {
   try {
-    const response = await API.post("/exams/requests", examRequest, {
-      params: { email, password },
+    const response = await API.post("/exams/requests/", examRequest, {
+      params: { email, password }, // Trimitere parametrii de autentificare
     });
     console.log("Exam request created:", response.data);
     return response.data;
@@ -62,7 +62,6 @@ const createExamRequest = async (examRequest, email, password) => {
     throw error;
   }
 };
-
 /**
  * Șterge o cerere de examen
  * @param {number} requestId ID-ul cererii de șters
@@ -82,9 +81,22 @@ const deleteExamRequest = async (requestId, email, password) => {
     throw error;
   }
 };
+/**
+ * Fetch list of professors from the backend.
+ * @returns {Promise} List of professors
+ */
+export const fetchProfessors = async () => {
+  try {
+    const response = await API.get("https://f984-2a02-2f0e-f900-7c00-208e-d991-6c6d-48fb.ngrok-free.app/professors/");
+    return response.data; // Returnează lista profesorilor
+  } catch (error) {
+    console.error("Failed to fetch professors:", error.response?.data || error.message);
+    throw error;
+  }
+};
 async function login(email, password) {
     try {
-        const response = await fetch("https://f0aa-2a02-2f0e-f900-7c00-15ae-c7c-478f-dbc8.ngrok-free.app/auth/login", {
+        const response = await fetch("https://f984-2a02-2f0e-f900-7c00-208e-d991-6c6d-48fb.ngrok-free.app/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
