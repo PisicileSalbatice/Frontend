@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { createExamRequest } from '../api'; 
+import { createExamRequest, fetchProfessors } from '../api'; 
 import '../styles/ExamSchedulingPage.css';
 
 function ExamSchedulingPage() {
@@ -10,7 +10,8 @@ function ExamSchedulingPage() {
   const [selectedDate, setSelectedDate] = useState('');
   const [classroom, setClassroom] = useState('');
   const [subject, setSubject] = useState('');
-  const [professor, setProfessor] = useState('ProfA');
+  const [professor, setProfessor] = useState('');
+  const [professors, setProfessors] = useState([]); // State pentru profesori
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -23,6 +24,27 @@ function ExamSchedulingPage() {
       const formattedDate = correctedDate.toISOString().split('T')[0];
       setSelectedDate(formattedDate);
     }
+
+    // Încarcă lista de profesori din backend
+    const loadProfessors = async () => {
+      try {
+        const professorList = await fetchProfessors();
+        console.log("Professors fetched:", professorList);  // Log pentru a vedea ce date primesc
+  
+        if (Array.isArray(professorList)) {
+          setProfessors(professorList);
+        } else {
+          setProfessors([]);  // În caz că nu este un array
+          console.error("Received data is not an array.");
+        }
+      } catch (error) {
+        setErrorMessage("Failed to load professors.");
+        console.error("Error loading professors:", error);
+      }
+    };
+  
+
+    loadProfessors();
   }, [location.search]);
 
   const handleSubmit = async (e) => {
@@ -35,29 +57,23 @@ function ExamSchedulingPage() {
 
     const examRequest = {
       student_id: 1,
-      professor_id: professor,
+      professor_id: professor, // ID-ul profesorului din lista încărcată
       classroom_id: classroom,
       requested_date: selectedDate,
       subject: subject,
     };
 
-    try {
-      const response = await createExamRequest(examRequest);
-      console.log('Exam request created successfully:', response);
-      setSuccessMessage('Exam scheduled successfully!');
-      setErrorMessage('');
-      setTimeout(() => navigate('/exams'), 2000);
-    } catch (error) {
-      console.error('Error creating exam request:', error);
-      setErrorMessage('Failed to schedule the exam. Please try again later.');
-    }
+    const email = 'user@example.com'; // Exemplu, ar trebui să ai email-ul utilizatorului
+    const password = 'password'; // Exemplu, ar trebui să ai parola utilizatorului
+
+    
   };
 
   const handleReset = () => {
     setSelectedDate('');
     setClassroom('');
     setSubject('');
-    setProfessor('ProfA');
+    setProfessor('');
   };
 
   return (
@@ -112,9 +128,15 @@ function ExamSchedulingPage() {
               value={professor}
               onChange={(e) => setProfessor(e.target.value)}
             >
-              <option value="ProfA">Prof A</option>
-              <option value="ProfB">Prof B</option>
-              <option value="ProfC">Prof C</option>
+              {Array.isArray(professors) && professors.length > 0 ? (
+                professors.map((prof) => (
+                  <option key={prof.id} value={prof.id}>
+                    {prof.name}
+                  </option>
+                ))
+              ) : (
+                <option value="">No professors available</option>
+              )}
             </select>
           </label>
 

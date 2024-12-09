@@ -1,40 +1,83 @@
-// src/pages/LoginPage.js
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/LoginPage.css'; // Importă stilurile CSS din folderul styles
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../api"; // Importă funcția login din api.js
+import "../styles/LoginPage.css"; // Importă stilurile CSS
 
 function LoginPage() {
   const navigate = useNavigate();
 
-  const goToRegister = () => {
-    navigate('/register');
-  };
+  // State pentru email, parola și mesajele de eroare
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const goToHome = () => {
-    navigate('/home');
-  };
+  // Funcția pentru trimiterea cererii de autentificare
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    console.log("Email:", email);
+    console.log("Password:", password);
+
+    try {
+        const response = await login(email, password);
+        console.log("Server response:", response);
+
+        navigate("/home");
+    } catch (err) {
+        console.error("Login error:", err.message);
+        setError(err.message || "Eroare la conectare cu serverul.");
+    }
+};
+
+
+  
 
   return (
-    <div className="login-container">
-      <h2>Login Page</h2>
-      <p>Log into your account or choose an option below.</p>
+    <div className="login-page">
+      {/* Antet */}
+      <header className="header">
+        <h1>USV Exam Planner</h1>
+        
+      </header>
 
-      {/* Formular pentru Login */}
-      <form className="login-form">
-        <label htmlFor="username">Username:</label>
-        <input type="text" id="username" name="username" placeholder="Enter username" />
-
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" name="password" placeholder="Enter password" />
-
-        <button type="button">Login</button>
-      </form>
-
-      {/* Butoane de navigare */}
-      <div className="login-buttons">
-        <button onClick={goToHome}>Go to Home</button>
-        <button onClick={goToRegister}>Go to Register</button>
+      {/* Secțiunea principală */}
+      <div className="main-section">
+        <div className="welcome-banner">
+          <h2>Welcome to USV Exam Planner</h2>
+          <p>Login to access your account</p>
+        </div>
+        <div className="login-form-container">
+          <form className="login-form" onSubmit={handleLogin}>
+            <h3>Login Form</h3>
+            <p>Enter your login credentials</p>
+            {error && <p className="error">{error}</p>} {/* Mesaj de eroare */}
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Actualizează email-ul
+              required
+            />
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Actualizează parola
+              required
+            />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className="footer">
+        <p>© 2024 Universitatea Ștefan cel Mare Suceava</p>
+      </footer>
     </div>
   );
 }

@@ -50,11 +50,9 @@ const fetchStudentExams = async (email, password) => {
  * @param {string} password
  * @returns {Promise} Detaliile cererii create
  */
-const createExamRequest = async (examRequest, email, password) => {
+const createExamRequest = async (examRequest) => {
   try {
-    const response = await API.post("/exams/requests", examRequest, {
-      params: { email, password },
-    });
+    const response = await API.post("/exams/requests/", examRequest);
     console.log("Exam request created:", response.data);
     return response.data;
   } catch (error) {
@@ -62,7 +60,6 @@ const createExamRequest = async (examRequest, email, password) => {
     throw error;
   }
 };
-
 /**
  * Șterge o cerere de examen
  * @param {number} requestId ID-ul cererii de șters
@@ -79,6 +76,19 @@ const deleteExamRequest = async (requestId, email, password) => {
     return response.data;
   } catch (error) {
     console.error("Failed to delete exam request:", error.response?.data || error.message);
+    throw error;
+  }
+};
+/**
+ * Fetch list of professors from the backend.
+ * @returns {Promise} List of professors
+ */
+export const fetchProfessors = async () => {
+  try {
+    const response = await API.get("https://f984-2a02-2f0e-f900-7c00-208e-d991-6c6d-48fb.ngrok-free.app/professors/");
+    return response.data; // Returnează lista profesorilor
+  } catch (error) {
+    console.error("Failed to fetch professors:", error.response?.data || error.message);
     throw error;
   }
 };

@@ -1,38 +1,122 @@
-/* src/styles/LoginPage.css */
+/* Stiluri pentru pagina de login */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
 
-.login-container {
-    max-width: 400px;         /* Setează o lățime maximă pentru centrul paginii */
-    margin: 0 auto;           /* Centrează containerul pe orizontală */
-    padding: 20px;            /* Adaugă padding pentru aspect */
-    text-align: center;       /* Aliniază textul pe centrul paginii */
-  }
-  
-  .login-form {
-    display: flex;            /* Setează form-ul pentru layout pe verticală */
-    flex-direction: column;   /* Așează elementele în coloană */
-    gap: 10px;                /* Spațiere între câmpurile formularului */
-  }
-  
-  .login-form label {
-    text-align: left;         /* Aliniază textul etichetelor la stânga */
-    margin-bottom: 5px;       /* Spațiere sub etichete */
-    font-weight: bold;        /* Face textul etichetelor mai vizibil */
-  }
-  
-  .login-buttons {
-    margin-top: 20px;         /* Adaugă spațiu între formular și butoane */
-    display: flex;            /* Așează butoanele unul lângă altul */
-    justify-content: space-between; /* Spațiu egal între butoane */
-  }
-  
-  .login-form input {
-    padding: 8px;             /* Adaugă padding pentru input */
-    font-size: 16px;          /* Dimensiune confortabilă pentru text */
-  }
-  
-  button {
-    padding: 10px 20px;       /* Dimensiunea butoanelor */
-    font-size: 16px;          /* Mărimea textului pentru vizibilitate */
-    cursor: pointer;          /* Cursor pointer pentru butoane */
-  }
-  
+/* Antet */
+.header {
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav-links button {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+  text-decoration: underline;
+}
+
+/* Secțiunea principală */
+.main-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #e0e7ff; /* Fundal albastru deschis */
+  padding: 40px 20px;
+}
+
+.welcome-banner {
+  background-color: #5a73db; /* Albastru intens */
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.welcome-banner h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.welcome-banner p {
+  font-size: 16px;
+}
+
+/* Formularul de login */
+.login-form-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-form h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.login-form p {
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: gray;
+}
+
+.login-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.login-form button {
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.login-form button:hover {
+  background-color: #333;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  font-size: 14px;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext"; // Importă contextul de autentificare
 import "../styles/HomePage.css";
@@ -7,8 +7,6 @@ function HomePage() {
   const navigate = useNavigate();
   const { isAuthenticated, logout, user } = useAuth(); // Preia starea de autentificare și funcția logout
   const email = user?.email; // Presupunând că `user` conține emailul utilizatorului
-
-  console.log(email); // Verifică ce email apare
 
   // Verificăm dacă emailul se termină cu @student.usv.ro
   const isStudentEmail = email && email.toLowerCase().endsWith("@student.usv.ro");
@@ -32,82 +30,69 @@ function HomePage() {
     navigate("/requests"); // Navighează la RequestsPage
   };
 
-  // State pentru luna selectată
+  // State pentru luna și anul curent
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
+  const [currentDate, setCurrentDate] = useState(new Date()); // Data curentă
 
   // Array pentru numele lunilor
   const months = [
-    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
   ];
 
-  // Array pentru numele zilelor săptămânii
-  const daysOfWeek = ["D", "L", "M", "M", "J", "V", "S"];
+  // Array pentru numele zilelor săptămânii în limba română
+  const daysOfWeek = ["L", "M", "M", "J", "V", "S", "D"];
 
-  // Calcularea primelor zile din lună
-  const getFirstDayOfMonth = () => {
+  const getFirstDayOfMonth = (year, month) => {
+    // Calculăm prima zi a lunii curente
     const date = new Date(year, month, 1);
-    return date.getDay(); // Returnează ziua săptămânii (0=Sunday, 1=Monday, etc.)
+    return (date.getDay() + 6) % 7; // Ajustăm pentru săptămâna care începe de luni
   };
-
-  // Generarea zilelor calendarului
+  
   const generateDays = () => {
-    const firstDay = getFirstDayOfMonth(); // Ziua săptămânii în care începe luna
-    const daysInMonth = new Date(year, month + 1, 0).getDate(); // Numărul de zile din luna curentă
+    const firstDay = getFirstDayOfMonth(year, month); // Prima zi a lunii (0=Luni)
+    const daysInMonth = new Date(year, month + 1, 0).getDate(); // Numărul de zile din lună
     const daysArray = [];
-
-    // Adaugă zilele din luna anterioară dacă este necesar pentru completarea săptămânii
-    const prevMonthDays = new Date(year, month, 0).getDate(); // Ultima zi a lunii anterioare
-    let prevMonthDay = prevMonthDays - firstDay + 1; // Ziua în care să începem
-
-    // Adăugăm zile din luna precedentă
-    for (let i = firstDay; i > 0; i--) {
-      daysArray.push({
-        day: prevMonthDay,
-        isCurrentMonth: false,
-      });
-      prevMonthDay++;
+  
+    // Adăugăm casete goale înainte de prima zi a lunii
+    for (let i = 0; i < firstDay; i++) {
+      daysArray.push(null); // Casete goale
     }
-
-    // Adăugăm zilele din luna curentă
+  
+    // Adăugăm zilele efective din lună
     for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push({
-        day: i,
-        isCurrentMonth: true,
-      });
+      daysArray.push(i);
     }
-
-    // Adăugăm zilele din luna următoare pentru completarea săptămânii
-    const totalDaysInCalendar = daysArray.length;
-    while (totalDaysInCalendar % 7 !== 0) {
-      daysArray.push({
-        day: i,
-        isCurrentMonth: false,
-      });
-      i++;
-    }
-
+  
     return daysArray;
   };
-
-  // Navigare între luni
+  
   const handleNextMonth = () => {
     if (month === 11) {
       setMonth(0);
-      setYear(year + 1);
+      setYear((prevYear) => prevYear + 1); // Anul avansează corect
     } else {
-      setMonth(month + 1);
+      setMonth((prevMonth) => prevMonth + 1);
     }
   };
-
+  
   const handlePrevMonth = () => {
     if (month === 0) {
       setMonth(11);
-      setYear(year - 1);
+      setYear((prevYear) => prevYear - 1); // Anul scade corect
     } else {
-      setMonth(month - 1);
+      setMonth((prevMonth) => prevMonth - 1);
     }
   };
+  
+  // Sincronizare inițială cu data curentă
+  useEffect(() => {
+    const currentDate = new Date();
+    setMonth(currentDate.getMonth());
+    setYear(currentDate.getFullYear());
+    setCurrentDate(currentDate); // Actualizează data curentă
+  }, []);
+  
 
   return (
     <div className="home-page">
@@ -150,16 +135,18 @@ function HomePage() {
               </div>
             ))}
 
-            {generateDays().map((item, index) => {
-              const { day, isCurrentMonth } = item;
-              let className = "";
-              if (!isCurrentMonth) {
-                className = "previous-or-next-month"; // Stil pentru zilele din luna anterioară/următoare
+            {generateDays().map((day, index) => {
+              if (day === null) {
+                return <div key={index} className="day empty"></div>;
               }
+
+              // Verificăm dacă ziua curentă este în calendarul generat și o marcăm
+              const isCurrentDay = currentDate.getDate() === day && currentDate.getMonth() === month && currentDate.getFullYear() === year;
+              let className = isCurrentDay ? "current-day" : "";
 
               return (
                 <div
-                  key={index}
+                  key={day}
                   className={`day ${className}`}
                   onClick={() => handleDayClick(day)}
                 >

@@ -1,0 +1,58 @@
+/* Stiluri pentru RequestApprovalPage */
+
+.request-approval-page {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .request-approval-page h2 {
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .request-approval-page p {
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  .accept-btn,
+  .reject-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .accept-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .reject-btn {
+    background-color: #f44336;
+  }
+  
+  .reject-btn:hover {
+    background-color: #e53935;
+  }
+  
+  .decision-message {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e0f7fa;
+    color: #00796b;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
