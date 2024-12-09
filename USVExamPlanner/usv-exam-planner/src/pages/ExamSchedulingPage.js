@@ -125,13 +125,13 @@ function ExamSchedulingPage() {
           <label>
             Professor:
             <select
-              value={professor}
+              value={""}
               onChange={(e) => setProfessor(e.target.value)}
             >
               {Array.isArray(professors) && professors.length > 0 ? (
                 professors.map((prof) => (
                   <option key={prof.id} value={prof.id}>
-                    {prof.name}
+                    {prof.last_name+" "+prof.first_name}
                   </option>
                 ))
               ) : (
@@ -149,5 +149,4 @@ function ExamSchedulingPage() {
     </div>
   );
 }
-
 export default ExamSchedulingPage;
