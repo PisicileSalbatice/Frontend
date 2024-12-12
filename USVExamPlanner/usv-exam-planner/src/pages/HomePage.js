@@ -1,25 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext"; // Importă contextul de autentificare
+import { useAuth } from "./AuthContext";
 import "../styles/HomePage.css";
 
 function HomePage() {
   const navigate = useNavigate();
-  const { isAuthenticated, logout, user } = useAuth(); // Preia starea de autentificare și funcția logout
-  const email = user?.email; // Presupunând că `user` conține emailul utilizatorului
+  const { isAuthenticated, logout, user } = useAuth();
+  const email = user?.email;
 
-  // Verificăm dacă emailul se termină cu @student.usv.ro
   const isStudentEmail = email && email.toLowerCase().endsWith("@student.usv.ro");
 
   const handleLogout = () => {
-    logout(); // Dezautentifică utilizatorul
-    navigate("/login"); // Navighează la pagina de Login
+    logout();
+    navigate("/login");
   };
 
   const handleDayClick = (day) => {
     const date = new Date(year, month, day);
-    const formattedDate = date.toISOString().split("T")[0]; // Formatăm data ca "YYYY-MM-DD"
-    navigate(`/exam-scheduling?date=${formattedDate}`); // Navigăm la ExamSchedulingPage cu data ca query param
+    const formattedDate = date.toISOString().split("T")[0];
+    navigate(`/exam-scheduling?date=${formattedDate}`);
   };
 
   const handleApproval = () => {
@@ -27,76 +26,83 @@ function HomePage() {
   };
 
   const handleMoreRequests = () => {
-    navigate("/requests"); // Navighează la RequestsPage
+    navigate("/requests");
   };
 
-  // State pentru luna și anul curent
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
-  const [currentDate, setCurrentDate] = useState(new Date()); // Data curentă
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Array pentru numele lunilor
   const months = [
     "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
   ];
 
-  // Array pentru numele zilelor săptămânii în limba română
   const daysOfWeek = ["L", "M", "M", "J", "V", "S", "D"];
 
+  const getDaysInMonth = (year, month) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
   const getFirstDayOfMonth = (year, month) => {
-    // Calculăm prima zi a lunii curente
-    const date = new Date(year, month, 1);
-    return (date.getDay() + 6) % 7; // Ajustăm pentru săptămâna care începe de luni
+    return (new Date(year, month, 1).getDay() + 6) % 7;
   };
-  
-  const generateDays = () => {
-    const firstDay = getFirstDayOfMonth(year, month); // Prima zi a lunii (0=Luni)
-    const daysInMonth = new Date(year, month + 1, 0).getDate(); // Numărul de zile din lună
-    const daysArray = [];
-  
-    // Adăugăm casete goale înainte de prima zi a lunii
-    for (let i = 0; i < firstDay; i++) {
-      daysArray.push(null); // Casete goale
-    }
-  
-    // Adăugăm zilele efective din lună
-    for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push(i);
-    }
-  
-    return daysArray;
-  };
-  
-  const handleNextMonth = () => {
-    if (month === 11) {
-      setMonth(0);
-      setYear((prevYear) => prevYear + 1); // Anul avansează corect
-    } else {
-      setMonth((prevMonth) => prevMonth + 1);
-    }
-  };
-  
+
   const handlePrevMonth = () => {
     if (month === 0) {
       setMonth(11);
-      setYear((prevYear) => prevYear - 1); // Anul scade corect
+      setYear((prevYear) => prevYear - 1);
     } else {
       setMonth((prevMonth) => prevMonth - 1);
     }
   };
-  
-  // Sincronizare inițială cu data curentă
+
+  const handleNextMonth = () => {
+    if (month === 11) {
+      setMonth(0);
+      setYear((prevYear) => prevYear + 1);
+    } else {
+      setMonth((prevMonth) => prevMonth + 1);
+    }
+  };
+
+  const generateCalendar = () => {
+    const daysInMonth = getDaysInMonth(year, month);
+    const firstDay = getFirstDayOfMonth(year, month);
+    const daysArray = [];
+
+    for (let i = 0; i < firstDay; i++) {
+      daysArray.push(<div key={`empty-${i}`} className="day empty"></div>);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const isCurrentDay =
+        currentDate.getDate() === day &&
+        currentDate.getMonth() === month &&
+        currentDate.getFullYear() === year;
+      const className = isCurrentDay ? "day current-day" : "day";
+      daysArray.push(
+        <div
+          key={`day-${day}`}
+          className={className}
+          onClick={() => handleDayClick(day)}
+        >
+          {day}
+        </div>
+      );
+    }
+
+    return daysArray;
+  };
+
   useEffect(() => {
     const currentDate = new Date();
     setMonth(currentDate.getMonth());
     setYear(currentDate.getFullYear());
-    setCurrentDate(currentDate); // Actualizează data curentă
+    setCurrentDate(currentDate);
   }, []);
-  
 
   return (
     <div className="home-page">
-      {/* Antet */}
       <header className="header">
         <h1>USV Exam Planner</h1>
         <nav className="nav-links">
@@ -114,58 +120,32 @@ function HomePage() {
         </div>
       </header>
 
-      {/* Banner principal */}
       <div className="banner">
         <h2>Welcome to USV Exam Planner</h2>
         <p>Plan your exams efficiently</p>
       </div>
 
-      {/* Calendar */}
       <div className="calendar-section">
         <div className="calendar-header">
           <button onClick={handlePrevMonth}>Previous</button>
           <h3>{months[month]} {year}</h3>
           <button onClick={handleNextMonth}>Next</button>
         </div>
-        <div className="calendar">
-          <div className="calendar-grid">
-            {daysOfWeek.map((day, index) => (
-              <div key={index} className="day-name">
-                {day}
-              </div>
-            ))}
-
-            {generateDays().map((day, index) => {
-              if (day === null) {
-                return <div key={index} className="day empty"></div>;
-              }
-
-              // Verificăm dacă ziua curentă este în calendarul generat și o marcăm
-              const isCurrentDay = currentDate.getDate() === day && currentDate.getMonth() === month && currentDate.getFullYear() === year;
-              let className = isCurrentDay ? "current-day" : "";
-
-              return (
-                <div
-                  key={day}
-                  className={`day ${className}`}
-                  onClick={() => handleDayClick(day)}
-                >
-                  {day}
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Legenda */}
-          <div className="legend">
-            <span className="legend-item pending">Pending</span>
-            <span className="legend-item declined">Declined</span>
-            <span className="legend-item approved">Approved</span>
-          </div>
+        <div className="calendar-grid">
+          {daysOfWeek.map((day, index) => (
+            <div key={index} className="day-name">
+              {day}
+            </div>
+          ))}
+          {generateCalendar()}
+        </div>
+        <div className="legend">
+          <span className="legend-item pending">Pending</span>
+          <span className="legend-item declined">Declined</span>
+          <span className="legend-item approved">Approved</span>
         </div>
       </div>
 
-      {/* Requests - Se afișează doar dacă utilizatorul nu are email @student.usv.ro */}
       {!isStudentEmail && (
         <div className="requests-section">
           <h3>Requests</h3>
@@ -203,7 +183,6 @@ function HomePage() {
         </div>
       )}
 
-      {/* Footer */}
       <footer className="footer">
         <p>© 2025 USV Exam Planner. All Rights Reserved.</p>
         <p>Contact Us: InfoUSV@gmail.com</p>
