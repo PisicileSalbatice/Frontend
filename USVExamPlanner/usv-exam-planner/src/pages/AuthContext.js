@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
 
-// Creăm contextul pentru autentificare
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -12,14 +11,18 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Inițial nu avem un utilizator logat
+  const [user, setUser] = useState(null);
 
   const login = (email, password) => {
-    // Logica ta de autentificare, de exemplu un apel API
     return new Promise((resolve, reject) => {
-      if (email === "student@usv.ro" && password === "password") {
-        setUser({ email });
-        resolve({ email });
+      if (email.endsWith("@student.usv.ro")) {
+        // Setăm rolul ca "student" dacă email-ul este de student
+        setUser({ email, role: "student", student_id: 1 });
+        resolve({ email, role: "student", student_id: 1 });
+      } else if (email.endsWith("@usm.ro")) {
+        // Setăm rolul ca "professor" dacă email-ul este de profesor
+        setUser({ email, role: "professor", professor_id: 7116 });
+        resolve({ email, role: "professor", professor_id: 7116 });
       } else {
         reject(new Error("Invalid credentials"));
       }
@@ -27,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null); // La logout, resetăm userul
+    setUser(null);
   };
 
   return (
