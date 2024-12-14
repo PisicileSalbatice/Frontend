@@ -9,6 +9,8 @@ function HomePage() {
   const email = user?.email;
 
   const isStudentEmail = email && email.toLowerCase().endsWith("@student.usv.ro");
+  const isProfessorEmail = email && email.toLowerCase().endsWith("@usm.ro");
+  const userType = isStudentEmail ? "Student" : isProfessorEmail ? "Profesor" : "Utilizator necunoscut";
 
   const handleLogout = () => {
     logout();
@@ -21,17 +23,10 @@ function HomePage() {
     navigate(`/exam-scheduling?date=${formattedDate}`);
   };
 
-  const handleApproval = () => {
-    navigate("/request-approval");
-  };
-
-  const handleMoreRequests = () => {
-    navigate("/requests");
-  };
-
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [popupDetails, setPopupDetails] = useState(null);
 
   const months = [
     "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
@@ -94,6 +89,14 @@ function HomePage() {
     return daysArray;
   };
 
+  const openPopup = (requestDetails) => {
+    setPopupDetails(requestDetails);
+  };
+
+  const closePopup = () => {
+    setPopupDetails(null);
+  };
+
   useEffect(() => {
     const currentDate = new Date();
     setMonth(currentDate.getMonth());
@@ -115,8 +118,10 @@ function HomePage() {
             <button onClick={() => navigate("/login")}>Login</button>
           )}
         </nav>
-        <div className="search-bar">
-          <input type="text" placeholder="Search in site" />
+        <div className="user-info">
+          <span>{userType}</span> 
+          <span role="img" aria-label="profile">👤</span> 
+          <span>{email}</span>
         </div>
       </header>
 
@@ -155,12 +160,19 @@ function HomePage() {
             </p>
             <p>Math Exam - Group 3143b</p>
             <p>04/01/2025 | 15:00-17:00</p>
-            <button onClick={handleApproval} className="approve-button">
-              Approve
+            <button 
+              onClick={() => openPopup({
+                name: "Pascut Aurelia",
+                exam: "Math Exam - Group 3143b",
+                date: "04/01/2025",
+                time: "15:00-17:00",
+              })}
+              className="detail-button"
+            >
+              Detail Request
             </button>
-            <button onClick={handleApproval} className="decline-button">
-              Reject
-            </button>
+         
+            
           </div>
 
           <div className="request-item">
@@ -169,26 +181,70 @@ function HomePage() {
             </p>
             <p>Science Exam - Group 3143b</p>
             <p>13/01/2025 | 12:00-14:00</p>
-            <button onClick={handleApproval} className="approve-button">
-              Approve
+            <button 
+              onClick={() => openPopup({
+                name: "Rotaru Aurelian",
+                exam: "Science Exam - Group 3143b",
+                date: "13/01/2025",
+                time: "12:00-14:00",
+              })}
+              className="detail-button"
+            >
+              Detail Request
             </button>
-            <button onClick={handleApproval} className="decline-button">
-              Reject
-            </button>
+           
+           
           </div>
-
-          <button onClick={handleMoreRequests} className="more-requests-button">
-            More requests
-          </button>
         </div>
       )}
 
-      <footer className="footer">
-        <p>© 2025 USV Exam Planner. All Rights Reserved.</p>
-        <p>Contact Us: InfoUSV@gmail.com</p>
-      </footer>
-    </div>
-  );
+{popupDetails && (
+     <div className="popup-overlay">
+       <div className="popup-content">
+         <h3>Request Details</h3>
+         <p><strong>Name:</strong> {popupDetails.name}</p>
+         <p><strong>Exam:</strong> {popupDetails.exam}</p>
+         <p><strong>Date:</strong> {popupDetails.date}</p>
+         <p><strong>Time:</strong> {popupDetails.time}</p>
+         <div className="popup-buttons">
+           <button 
+             className="approve-button" 
+             onClick={() => {
+               console.log("Approved:", popupDetails);
+               closePopup();
+             }}
+           >
+             Approve
+           </button>
+           <button 
+             className="decline-button" 
+             onClick={() => {
+               console.log("Declined:", popupDetails);
+               closePopup();
+             }}
+           >
+             Reject
+           </button>
+           <button 
+             className="close-button" 
+             onClick={() => {
+               console.log("Declined:", popupDetails);
+               closePopup();
+             }}
+           >
+             Close
+           </button>
+         </div>
+       </div>
+     </div>
+   )}
+
+  <footer className="footer">
+    <p>© 2025 USV Exam Planner. All Rights Reserved.</p>
+    <p>Contact Us: InfoUSV@gmail.com</p>
+  </footer>
+</div>
+);
 }
 
 export default HomePage;
