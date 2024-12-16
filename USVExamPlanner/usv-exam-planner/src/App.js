@@ -30,8 +30,8 @@ function App() {
           {/* Ruta pentru programarea examenelor */}
           <Route path="/exam-scheduling" element={<ExamSchedulingPage />} />
 
-          {/* Redirecționare implicită către HomePage */}
-          <Route path="/" element={<HomePage />} />
+          {/* Redirecționare implicită către Login */}
+          <Route path="/" element={<LoginPage />} />
         </Routes>
       </Router>
     </AuthProvider>

@@ -5,11 +5,13 @@ import "../styles/HomePage.css";
 
 function HomePage() {
   const navigate = useNavigate();
-  const { isAuthenticated, logout, user } = useAuth();
-  const email = user?.email;
+  const { isAuthenticated, logout} = useAuth();
+  const user = JSON.parse(localStorage.getItem("userdetails"));
+  const role=user.role.toUpperCase();
+  const name=user.name;
 
-  const isStudentEmail = email && email.toLowerCase().endsWith("@student.usv.ro");
-  const isProfessorEmail = email && email.toLowerCase().endsWith("@usm.ro");
+  const isStudentEmail = role==="student";
+  const isProfessorEmail = role==="professor";
   const userType = isStudentEmail ? "Student" : isProfessorEmail ? "Profesor" : "Utilizator necunoscut";
 
   const handleLogout = () => {
@@ -119,9 +121,9 @@ function HomePage() {
           )}
         </nav>
         <div className="user-info">
-          <span>{userType}</span> 
+          <span>{name}</span> 
           <span role="img" aria-label="profile">👤</span> 
-          <span>{email}</span>
+          <span>{role}</span>
         </div>
       </header>
 

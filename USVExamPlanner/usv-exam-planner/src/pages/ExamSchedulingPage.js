@@ -63,15 +63,17 @@ function ExamSchedulingPage() {
       return;
     }
 
+    const student=JSON.parse(localStorage.getItem("userdetails"));
     
 
     const examRequest = {
-      student_id: 1,
+      student_id: student.id,
       professor_id: professor,
       classroom_id: classroom,
       requested_date: selectedDate,
       subject,
     };
+    console.log(examRequest);
 
     try {
       await createExamRequest(examRequest);

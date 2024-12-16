@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api"; // Importă funcția login din api.js
+import { getuserdetails, login } from "../api"; // Importă funcția login din api.js
 import "../styles/LoginPage.css"; // Importă stilurile CSS
 
 function LoginPage() {
@@ -21,6 +21,8 @@ function LoginPage() {
     try {
       const response = await login(email, password);
       console.log("Login successful:", response);
+      const userDetails=await getuserdetails(email);
+      localStorage.setItem("userdetails", JSON.stringify(userDetails));
       navigate("/home");
     } catch (err) {
       console.error("Login error:", err.message);

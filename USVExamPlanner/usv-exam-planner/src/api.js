@@ -36,6 +36,30 @@ export const login = async (email, password) => {
   }
 };
 
+export const getuserdetails = async (email) => {
+  try {
+    const response = await fetch(`https://actively-settling-tortoise.ngrok-free.app/exams/user/details?email=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      
+    });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const data = await response.json();
+    console.log("User details:", data);
+    return data;
+  } catch (error) {
+    console.error("Error during login:", error.message);
+    throw error;
+  }
+};
+
+
 /**
  * Obține examenele unui student
  * @param {string} email
