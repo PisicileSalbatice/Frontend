@@ -13,26 +13,38 @@ const API = axios.create({
  * @param {string} password
  * @returns {Promise} Tokenul de acces sau mesaj de eroare
  */
-/*export const login = async (email, password) => {
+export const login = async (email, password) => {
   try {
-    const response = await API.post("/auth/login", { email, password });
-    console.log("Login successful:", response.data);
-    return response.data;
+    const response = await fetch("https://actively-settling-tortoise.ngrok-free.app/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+
+    const data = await response.json();
+    console.log("Login successful:", data);
+    return data;
   } catch (error) {
-    console.error("Login failed:", error.response?.data || error.message);
+    console.error("Error during login:", error.message);
     throw error;
   }
 };
-*/
+
 /**
  * Obține examenele unui student
  * @param {string} email
  * @param {string} password
  * @returns {Promise} Lista de examene
  */
-const fetchStudentExams = async (email, password) => {
+export const fetchStudentExams = async (email, password) => {
   try {
-    const response = await API.get("https://actively-settling-tortoise.ngrok-free.app/students/exams", {
+    const response = await API.get("/students/exams", {
       params: { email, password },
     });
     console.log("Student exams:", response.data);
@@ -46,21 +58,23 @@ const fetchStudentExams = async (email, password) => {
 /**
  * Creare cerere de examen
  * @param {Object} examRequest Obiect cu detaliile cererii
- * @param {string} email
- * @param {string} password
  * @returns {Promise} Detaliile cererii create
  */
-const createExamRequest = async (examRequest) => {
-  const response = await fetch("https://actively-settling-tortoise.ngrok-free.app/exams/requests/", {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(examRequest),
-  });
-
-  return response;
+export const createExamRequest = async (examRequest) => {
+  try {
+    const response = await API.post("/exams/requests/", examRequest, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("Exam request created:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to create exam request:", error.response?.data || error.message);
+    throw error;
+  }
 };
+
 /**
  * Șterge o cerere de examen
  * @param {number} requestId ID-ul cererii de șters
@@ -68,9 +82,9 @@ const createExamRequest = async (examRequest) => {
  * @param {string} password
  * @returns {Promise} Mesaj de succes
  */
-const deleteExamRequest = async (requestId, email, password) => {
+export const deleteExamRequest = async (requestId, email, password) => {
   try {
-    const response = await API.delete(`https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}`, {
+    const response = await API.delete(`/exams/requests/${requestId}`, {
       params: { email, password },
     });
     console.log("Exam request deleted:", response.data);
@@ -81,19 +95,24 @@ const deleteExamRequest = async (requestId, email, password) => {
   }
 };
 
-// api.js
-export async function fetchClassrooms() {
+/**
+ * Fetch classrooms from the backend
+ * @returns {Promise} List of classrooms
+ */
+export const fetchClassrooms = async () => {
   try {
     const response = await fetch("https://actively-settling-tortoise.ngrok-free.app/classrooms/");
     if (!response.ok) {
-      throw new Error('Failed to fetch classrooms');
+      throw new Error("Failed to fetch classrooms");
     }
-    return await response.json();
+    const data = await response.json();
+    console.log("Classrooms fetched:", data);
+    return data;
   } catch (error) {
-    console.error('Error fetching classrooms:', error);
+    console.error("Error fetching classrooms:", error);
     return [];
   }
-}
+};
 
 /**
  * Fetch list of professors from the backend.
@@ -101,37 +120,20 @@ export async function fetchClassrooms() {
  */
 export const fetchProfessors = async () => {
   try {
-    const response = await API.get("https://actively-settling-tortoise.ngrok-free.app/professors/");
-    return response.data; // Returnează lista profesorilor
+    const response = await API.get("/professors/");
+    console.log("Professors fetched:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch professors:", error.response?.data || error.message);
     throw error;
   }
 };
-async function login(email, password) {
-    try {
-        const response = await fetch("https://actively-settling-tortoise.ngrok-free.app/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
 
-        if (!response.ok) {
-            throw new Error("Login failed");
-        }
-
-        const data = await response.json();
-        console.log("Login successful:", data);
-    } catch (error) {
-        console.error("Error during login:", error.message);
-    }
-    
-}
-export {
-    login,
-    fetchStudentExams,
-    createExamRequest,
-    deleteExamRequest,
+export default {
+  login,
+  fetchStudentExams,
+  createExamRequest,
+  deleteExamRequest,
+  fetchClassrooms,
+  fetchProfessors,
 };

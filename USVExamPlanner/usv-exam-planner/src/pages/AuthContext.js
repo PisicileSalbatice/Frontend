@@ -13,16 +13,40 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = (email, password) => {
-    return new Promise((resolve, reject) => {
-      if (email.endsWith("@student.usv.ro")) {
-        // Setăm rolul ca "student" dacă email-ul este de student
-        setUser({ email, role: "student", student_id: 1 });
-        resolve({ email, role: "student", student_id: 1 });
-      } else if (email.endsWith("@usm.ro")) {
-        // Setăm rolul ca "professor" dacă email-ul este de profesor
-        setUser({ email, role: "professor", professor_id: 7116 });
-        resolve({ email, role: "professor", professor_id: 7116 });
+  const login = async (email, password) => {
+    return new Promise(async (resolve, reject) => {
+      // Exemplu simplificat de validare
+      if (password === "default_password") {
+        let role;
+
+        if (email.toLowerCase().includes("@student.usv.ro")) {
+          role = "student";
+        } else if (email.toLowerCase().includes("@usm.ro")) {
+          role = "professor";
+        } else {
+          role = "unknown";
+        }
+
+        try {
+          // Simulează fetch-ul datelor studentului din baza de date
+          const response = await fetch(`/api/users?email=${email}`);
+          const data = await response.json();
+
+          const userDetails = {
+            email,
+            role,
+            id: data.id,
+            first_name: data.first_name,
+            last_name: data.last_name,
+          };
+
+          setUser(userDetails);
+          console.log("User set in AuthContext:", userDetails); // Debug
+          resolve(userDetails);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+          reject(new Error("Failed to fetch user data"));
+        }
       } else {
         reject(new Error("Invalid credentials"));
       }
@@ -30,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
+    setUser(null); // Resetează utilizatorul
   };
 
   return (

@@ -19,16 +19,14 @@ function LoginPage() {
     console.log("Password:", password);
 
     try {
-        const response = await login(email, password);
-        console.log("Server response:", response);
-
-        navigate("/home");
+      const response = await login(email, password);
+      console.log("Login successful:", response);
+      navigate("/home");
     } catch (err) {
-        console.error("Login error:", err.message);
-        setError(err.message || "Eroare la conectare cu serverul.");
+      console.error("Login error:", err.message);
+      setError(err.message || "Eroare la conectare cu serverul.");
     }
-};
-
+  };
 
   
 
