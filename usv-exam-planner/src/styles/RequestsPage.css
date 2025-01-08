@@ -1,0 +1,152 @@
+/* General styles */
+.requests-page {
+    font-family: Arial, sans-serif;
+    background-color: #e0e7ff; /* Blueish background similar to the image */
+    color: #333;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .nav-buttons button {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: underline;
+    margin-left: 10px;
+  }
+  
+  .requests-section {
+    flex-grow: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+  }
+  
+  .requests-section h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .requests-section p {
+    font-size: 16px;
+    color: gray;
+    margin-bottom: 20px;
+  }
+  
+  .request-item {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .request-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .student-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .student-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .student-name p {
+    margin: 0;
+  }
+  
+  .request-actions button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .request-actions button:hover {
+    background-color: #0056b3;
+  }
+  
+  .more-requests-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .more-requests-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .footer {
+    background-color: #ffffff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+  }
+  
+  .footer-user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .user-details p {
+    margin: 0;
+  }
+  
+  .footer-actions button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .footer-actions button:hover {
+    background-color: #0056b3;
+  }
+  
