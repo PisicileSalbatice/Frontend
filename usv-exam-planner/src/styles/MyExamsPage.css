@@ -1,0 +1,143 @@
+/* General page styling */
+.my-exams-page {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f8f9fa; /* Soft background */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Header styling */
+  .my-exams-page h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* List container */
+  .exam-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Exam item card */
+  .exam-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .exam-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Professor name */
+  .exam-item .professor-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff; /* Accent color */
+    flex: 1;
+  }
+  
+  /* Exam details section */
+  .exam-item .exam-details {
+    flex: 2;
+    text-align: left;
+    margin-left: 20px;
+  }
+  
+  .exam-item .exam-details .subject {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .exam-item .exam-details .group {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+  }
+  
+  /* Exam date and time */
+  .exam-item .exam-date {
+    flex: 1;
+    text-align: right;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Responsive styling for smaller screens */
+  @media (max-width: 768px) {
+    .exam-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  
+    .exam-item .professor-name,
+    .exam-item .exam-date {
+      text-align: left;
+      margin-left: 0;
+    }
+  }
+
+  /* Home button styling */
+.home-button {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #007bff; /* Accent color */
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .home-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+
+  /* Status styling */
+.exam-status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: capitalize;
+    text-align: center;
+  }
+  
+  .exam-status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+  }
+  
+  .exam-status.approved {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+  
+  .exam-status.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  

@@ -10,6 +10,8 @@ import ExamSchedulingPage from "./pages/ExamSchedulingPage";
 
 // Importă AuthProvider din context
 import { AuthProvider } from "./pages/AuthContext"; // Asigură-te că importi corect
+import MyExamsPage from "./pages/MyExamsPage";
+
 
 function App() {
   return (
@@ -19,6 +21,9 @@ function App() {
         <Routes>
           {/* Ruta pentru pagina de Home */}
           <Route path="/home" element={<HomePage />} />
+
+           {/* Ruta pentru pagina de Home */}
+           <Route path="/my-exams" element={<MyExamsPage />} />
 
           {/* Rutele pentru Login */}
           <Route path="/login" element={<LoginPage />} />

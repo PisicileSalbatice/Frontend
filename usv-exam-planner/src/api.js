@@ -164,6 +164,23 @@ export const fetchProfessors = async () => {
   }
 };
 
+/**
+ * Obține lista de examene pentru utilizatorul curent
+ * @param {number} userId - ID-ul utilizatorului
+ * @returns {Promise} Lista de examene
+ */
+export const fetchExamsForUser = async (studentId) => {
+  try {
+    const response = await API.get("https://actively-settling-tortoise.ngrok-free.app/exams/exams/student/${student_id}");
+    console.log("Exams fetched:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch user exams:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 export default {
   login,
   fetchStudentExams,

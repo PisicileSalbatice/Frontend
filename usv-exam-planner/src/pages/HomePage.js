@@ -121,7 +121,7 @@ function HomePage() {
           {isAuthenticated ? (
             <button onClick={handleLogout}>Logout</button>
           ) : (
-            <button onClick={() => navigate("/login")}>Login</button>
+            <button onClick={() => navigate("/login")}>Logout</button>
           )}
         </nav>
         <div className="user-info">
