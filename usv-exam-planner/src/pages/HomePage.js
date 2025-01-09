@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { fetchProfessorRequests, approveRequest, rejectRequest } from "../api"; // Importează funcțiile din API
 import "../styles/HomePage.css";
 
 function HomePage() {
@@ -10,13 +11,54 @@ function HomePage() {
   // Verificăm și preluăm userdetails din localStorage
   const [userDetails, setUserDetails] = useState({ name: "", role: "" });
 
+  const [requests, setRequests] = useState([]); // Pentru cererile profesorului
+  const [loadingRequests, setLoadingRequests] = useState(false);
+
   useEffect(() => {
     const storedUser = localStorage.getItem("userdetails");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserDetails(parsedUser);
+
+      if (parsedUser.role === "professor") {
+        loadRequests(parsedUser.id); // Încarcă cererile doar pentru profesori
+      }
     }
   }, []);
+
+  const loadRequests = async (professorId) => {
+    setLoadingRequests(true);
+    try {
+      const data = await fetchProfessorRequests(professorId); // Fetch requests from API
+      setRequests(data);
+    } catch (err) {
+      console.error("Failed to fetch requests:", err);
+    } finally {
+      setLoadingRequests(false);
+    }
+  };
+
+ const handleApprove = async (requestId) => {
+  try {
+    await approveRequest(requestId); // Actualizează statusul în backend
+    setRequests((prevRequests) =>
+      prevRequests.filter((request) => request.id !== requestId) // Elimină cererea din lista profesorului
+    );
+  } catch (err) {
+    console.error("Failed to approve request:", err);
+  }
+};
+
+const handleReject = async (requestId) => {
+  try {
+    await rejectRequest(requestId); // Actualizează statusul în backend
+    setRequests((prevRequests) =>
+      prevRequests.filter((request) => request.id !== requestId) // Elimină cererea din lista profesorului
+    );
+  } catch (err) {
+    console.error("Failed to reject request:", err);
+  }
+};
 
   const role = userDetails.role ? userDetails.role.toLowerCase() : "unknown";
   const name = userDetails.name || "Utilizator necunoscut";
@@ -39,7 +81,6 @@ function HomePage() {
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [popupDetails, setPopupDetails] = useState(null);
 
   const months = [
     "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
@@ -50,6 +91,8 @@ function HomePage() {
   const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
   };
+
+  
 
   const getFirstDayOfMonth = (year, month) => {
     return (new Date(year, month, 1).getDay() + 6) % 7;
@@ -102,14 +145,6 @@ function HomePage() {
     return daysArray;
   };
 
-  const openPopup = (requestDetails) => {
-    setPopupDetails(requestDetails);
-  };
-
-  const closePopup = () => {
-    setPopupDetails(null);
-  };
-
   return (
     <div className="home-page">
       <header className="header">
@@ -150,12 +185,37 @@ function HomePage() {
           ))}
           {generateCalendar()}
         </div>
-        <div className="legend">
-          <span className="legend-item pending">Pending</span>
-          <span className="legend-item declined">Declined</span>
-          <span className="legend-item approved">Approved</span>
-        </div>
       </div>
+
+      {/* Section for professor requests */}
+      {userDetails.role === "professor" && (
+        <div className="requests-section">
+          <h2>Requests</h2>
+          {loadingRequests ? (
+            <p>Loading requests...</p>
+          ) : requests.length === 0 ? (
+            <p>No requests found.</p>
+          ) : (
+            <ul className="request-list">
+              {requests.map((request) => (
+                <li key={request.id} className="request-item">
+                  <p><strong>Subject:</strong> {request.subject}</p>
+                  <p><strong>Date:</strong> {request.requested_date}</p>
+                  <p><strong>Student:</strong> {request.student_name}</p>
+                  <div className="request-buttons">
+                    <button onClick={() => handleApprove(request.id)} className="approve-button">
+                      Approve
+                    </button>
+                    <button onClick={() => handleReject(request.id)} className="reject-button">
+                      Reject
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }

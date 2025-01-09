@@ -181,6 +181,66 @@ export const fetchExamsForUser = async (studentId) => {
 };
 
 
+
+
+
+
+
+/**
+ * Fetch all exam requests for a professor.
+ * @param {number} professorId
+ * @returns {Promise} List of requests
+ */
+export const fetchProfessorRequests = async (professorId) => {
+  try {
+    const response = await API.get("https://actively-settling-tortoise.ngrok-free.app/exams/requests", {
+      params: { professor_id: professorId },
+    });
+    console.log("Requests fetched:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch professor requests:", error);
+    throw error;
+  }
+};
+
+/**
+ * Approve an exam request.
+ * @param {number} requestId
+ * @returns {Promise}
+ */
+export const approveRequest = async (requestId) => {
+  try {
+    const response = await API.put("https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}", {
+      status: "approved", // Trimitem statusul actualizat
+    });
+    console.log("Request approved:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to approve request:", error);
+    throw error;
+  }
+};
+
+/**
+ * Reject an exam request.
+ * @param {number} requestId
+ * @returns {Promise}
+ */
+export const rejectRequest = async (requestId) => {
+  try {
+    const response = await API.put("https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}", {
+      status: "rejected", // Trimitem statusul actualizat
+    });
+    console.log("Request rejected:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to reject request:", error);
+    throw error;
+  }
+};
+
+
 export default {
   login,
   fetchStudentExams,
@@ -188,4 +248,7 @@ export default {
   deleteExamRequest,
   fetchClassrooms,
   fetchProfessors,
+  fetchProfessorRequests,
+  approveRequest,
+  rejectRequest,
 };
