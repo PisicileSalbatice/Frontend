@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { fetchProfessorRequests, approveRequest, rejectRequest } from "../api"; // Importează funcțiile din API
+import { fetchProfessorRequests, approveRequest, rejectRequest, fetchAllStudents } from "../api"; // Importează funcțiile din API
 import "../styles/HomePage.css";
 
 function HomePage() {
@@ -10,9 +10,12 @@ function HomePage() {
 
   // Verificăm și preluăm userdetails din localStorage
   const [userDetails, setUserDetails] = useState({ name: "", role: "" });
-
   const [requests, setRequests] = useState([]); // Pentru cererile profesorului
   const [loadingRequests, setLoadingRequests] = useState(false);
+  const [showPopup, setShowPopup] = useState(false); // Controlează afișarea popup-ului
+
+   // Adăugat pentru maparea student_id -> nume
+   const [studentMap, setStudentMap] = useState({}); // Mapare student_id -> nume student
 
   useEffect(() => {
     const storedUser = localStorage.getItem("userdetails");
@@ -38,27 +41,43 @@ function HomePage() {
     }
   };
 
- const handleApprove = async (requestId) => {
-  try {
-    await approveRequest(requestId); // Actualizează statusul în backend
-    setRequests((prevRequests) =>
-      prevRequests.filter((request) => request.id !== requestId) // Elimină cererea din lista profesorului
-    );
-  } catch (err) {
-    console.error("Failed to approve request:", err);
-  }
-};
+  // Adăugat: Funcție pentru încărcarea mapării student_id -> nume
+  const loadStudentMap = async () => {
+    try {
+      const students = await fetchAllStudents(); // Fetch lista tuturor studenților
+      const studentMapping = {};
+      students.forEach((student) => {
+        studentMapping[student.id] = `${student.first_name} ${student.last_name}`;
+      });
+      setStudentMap(studentMapping);
+    } catch (err) {
+      console.error("Failed to load student map:", err);
+    }
+  };
 
-const handleReject = async (requestId) => {
-  try {
-    await rejectRequest(requestId); // Actualizează statusul în backend
-    setRequests((prevRequests) =>
-      prevRequests.filter((request) => request.id !== requestId) // Elimină cererea din lista profesorului
-    );
-  } catch (err) {
-    console.error("Failed to reject request:", err);
-  }
-};
+  const handleApprove = async (requestId) => {
+    try {
+      console.log(`Approving request ID: ${requestId}`);
+      await approveRequest(requestId);
+      setRequests((prevRequests) =>
+        prevRequests.filter((request) => request.id !== requestId)
+      );
+    } catch (err) {
+      console.error("Failed to approve request:", err);
+    }
+  };
+
+  const handleReject = async (requestId) => {
+    try {
+      console.log(`Rejecting request ID: ${requestId}`);
+      await rejectRequest(requestId);
+      setRequests((prevRequests) =>
+        prevRequests.filter((request) => request.id !== requestId)
+      );
+    } catch (err) {
+      console.error("Failed to reject request:", err);
+    }
+  };
 
   const role = userDetails.role ? userDetails.role.toLowerCase() : "unknown";
   const name = userDetails.name || "Utilizator necunoscut";
@@ -72,6 +91,18 @@ const handleReject = async (requestId) => {
     navigate("/login");
   };
 
+  const handleScheduleClick = () => {
+    if (userDetails.role === "professor") {
+      setShowPopup(true); // Afișează popup-ul
+    } else {
+      navigate("/exam-scheduling");
+    }
+  };
+
+  const closePopup = () => {
+    setShowPopup(false); // Ascunde popup-ul
+  };
+
   const handleDayClick = (day) => {
     const date = new Date(year, month, day);
     const formattedDate = date.toISOString().split("T")[0];
@@ -83,7 +114,7 @@ const handleReject = async (requestId) => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const months = [
-    "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"
+    "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie",
   ];
 
   const daysOfWeek = ["L", "M", "M", "J", "V", "S", "D"];
@@ -91,8 +122,6 @@ const handleReject = async (requestId) => {
   const getDaysInMonth = (year, month) => {
     return new Date(year, month + 1, 0).getDate();
   };
-
-  
 
   const getFirstDayOfMonth = (year, month) => {
     return (new Date(year, month, 1).getDay() + 6) % 7;
@@ -132,11 +161,7 @@ const handleReject = async (requestId) => {
         currentDate.getFullYear() === year;
       const className = isCurrentDay ? "day current-day" : "day";
       daysArray.push(
-        <div
-          key={`day-${day}`}
-          className={className}
-          onClick={() => handleDayClick(day)}
-        >
+        <div key={`day-${day}`} className={className} onClick={() => handleDayClick(day)}>
           {day}
         </div>
       );
@@ -152,7 +177,7 @@ const handleReject = async (requestId) => {
         <nav className="nav-links">
           <button onClick={() => navigate("/home")}>Home</button>
           <button onClick={() => navigate("/my-exams")}>My Exams</button>
-          <button onClick={() => navigate("/exam-scheduling")}>Schedule</button>
+          <button onClick={handleScheduleClick}>Schedule</button>
           {isAuthenticated ? (
             <button onClick={handleLogout}>Logout</button>
           ) : (
@@ -161,8 +186,8 @@ const handleReject = async (requestId) => {
         </nav>
         <div className="user-info">
           <span>{userType}</span>
-          <span role="img" aria-label="profile">👤</span>
-          <span>{name}</span>
+          <span role="img" aria-label="profile: ">: </span>
+          <span>{name}👤</span>
         </div>
       </header>
 
@@ -170,6 +195,19 @@ const handleReject = async (requestId) => {
         <h2>Welcome to USV Exam Planner</h2>
         <p>Plan your exams efficiently</p>
       </div>
+
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h2>Feature Not Available</h2>
+            <p>This feature is not available for professors.</p>
+            <button className="close-popup" onClick={closePopup}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="calendar-section">
         <div className="calendar-header">
@@ -201,14 +239,14 @@ const handleReject = async (requestId) => {
                 <li key={request.id} className="request-item">
                   <p><strong>Subject:</strong> {request.subject}</p>
                   <p><strong>Date:</strong> {request.requested_date}</p>
-                  <p><strong>Student:</strong> {request.student_name}</p>
+                  <p>
+                    <strong>Student:</strong>{" "}
+                    {request.student_name || `ID: ${request.student_id}`} {/* Afișează ID-ul studentului */}
+                  </p>
+                  <p><strong>Status:</strong> {request.status || "Pending"}</p> {/* Afișează statusul */}
                   <div className="request-buttons">
-                    <button onClick={() => handleApprove(request.id)} className="approve-button">
-                      Approve
-                    </button>
-                    <button onClick={() => handleReject(request.id)} className="reject-button">
-                      Reject
-                    </button>
+                    <button onClick={() => handleApprove(request.id)}>Approve</button>
+                    <button onClick={() => handleReject(request.id)}>Reject</button>
                   </div>
                 </li>
               ))}

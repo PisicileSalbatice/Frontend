@@ -4,6 +4,7 @@ import { fetchStudentExams, fetchProfessors } from "../api";
 import "../styles/MyExamsPage.css";
 
 
+
 function MyExamsPage() {
     const [exams, setExams] = useState([]);
     const [professors, setProfessors] = useState([]);
@@ -68,9 +69,7 @@ function MyExamsPage() {
                   
                 </div>
                 <div className="exam-date">{exam.requested_date} </div>
-                <div className={`exam-status ${exam.status?.toLowerCase()}`}>
-                  {exam.status || "Pending"}
-                </div>
+                <p><strong>Status:</strong> {exam.status || "Pending"}</p> {/* Afișează statusul */}
               </div>
             ))
           )}

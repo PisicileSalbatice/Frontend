@@ -183,9 +183,6 @@ export const fetchExamsForUser = async (studentId) => {
 
 
 
-
-
-
 /**
  * Fetch all exam requests for a professor.
  * @param {number} professorId
@@ -205,15 +202,15 @@ export const fetchProfessorRequests = async (professorId) => {
 };
 
 /**
- * Approve an exam request.
- * @param {number} requestId
+ * Approve an exam request
+ * @param {number} requestId - ID-ul cererii
  * @returns {Promise}
  */
 export const approveRequest = async (requestId) => {
   try {
-    const response = await API.put("https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}", {
-      status: "approved", // Trimitem statusul actualizat
-    });
+    const url = "https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=approved";
+    console.log("Approving request with URL:", url);
+    const response = await API.put(url); // Trimitere cerere PUT
     console.log("Request approved:", response.data);
     return response.data;
   } catch (error) {
@@ -223,15 +220,15 @@ export const approveRequest = async (requestId) => {
 };
 
 /**
- * Reject an exam request.
- * @param {number} requestId
+ * Reject an exam request
+ * @param {number} requestId - ID-ul cererii
  * @returns {Promise}
  */
 export const rejectRequest = async (requestId) => {
   try {
-    const response = await API.put("https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}", {
-      status: "rejected", // Trimitem statusul actualizat
-    });
+    const url = "https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=rejected";
+    console.log("Rejecting request with URL:", url);
+    const response = await API.put(url); // Trimitere cerere PUT
     console.log("Request rejected:", response.data);
     return response.data;
   } catch (error) {
@@ -239,6 +236,26 @@ export const rejectRequest = async (requestId) => {
     throw error;
   }
 };
+
+
+
+/**
+ * Fetch all students
+ * @returns {Promise} Lista tuturor studenților
+ */
+export const fetchAllStudents = async () => {
+  try {
+    const response = await API.get("/students/");
+    console.log("Students fetched:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch students:", error);
+    throw error;
+  }
+};
+
+
+
 
 
 export default {
@@ -251,4 +268,5 @@ export default {
   fetchProfessorRequests,
   approveRequest,
   rejectRequest,
+  fetchAllStudents
 };
