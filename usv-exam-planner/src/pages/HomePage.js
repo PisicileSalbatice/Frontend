@@ -13,26 +13,48 @@ function HomePage() {
   const [requests, setRequests] = useState([]); // Pentru cererile profesorului
   const [loadingRequests, setLoadingRequests] = useState(false);
   const [showPopup, setShowPopup] = useState(false); // Controlează afișarea popup-ului
+  
+
+  const moveRequestToMyExams = (request) => {
+    const existingExams = JSON.parse(localStorage.getItem("my-exams-page")) || [];
+    const updatedExams = [...existingExams, request];
+    localStorage.setItem("my-exams-page", JSON.stringify(updatedExams));
+  };
 
    // Adăugat pentru maparea student_id -> nume
    const [studentMap, setStudentMap] = useState({}); // Mapare student_id -> nume student
 
-  useEffect(() => {
+   
+
+   useEffect(() => {
+    console.log("Student Map:", studentMap);
+  }, [studentMap]);
+
+  
+  
+
+   useEffect(() => {
     const storedUser = localStorage.getItem("userdetails");
+    console.log("Hai la balci:")
+    console.log(localStorage);
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserDetails(parsedUser);
-
+  
       if (parsedUser.role === "professor") {
         loadRequests(parsedUser.id); // Încarcă cererile doar pentru profesori
+        loadStudentMap(); // Încarcă maparea student_id -> nume student
       }
     }
   }, []);
 
+  
+
   const loadRequests = async (professorId) => {
     setLoadingRequests(true);
     try {
-      const data = await fetchProfessorRequests(professorId); // Fetch requests from API
+      const data = await fetchProfessorRequests(professorId);
+      console.log("Requests after fetching:", data);
       setRequests(data);
     } catch (err) {
       console.error("Failed to fetch requests:", err);
@@ -40,25 +62,40 @@ function HomePage() {
       setLoadingRequests(false);
     }
   };
+  
 
-  // Adăugat: Funcție pentru încărcarea mapării student_id -> nume
   const loadStudentMap = async () => {
     try {
-      const students = await fetchAllStudents(); // Fetch lista tuturor studenților
-      const studentMapping = {};
+      const response = await fetch("https://actively-settling-tortoise.ngrok-free.app/students");
+      const text = await response.text();
+      console.log("Raw Response:", text); // Debugging
+      
+      const students = JSON.parse(text);
+      console.log("Parsed Students:", students); // Verificăm conversia la JSON
+  
+      const map = {};
       students.forEach((student) => {
-        studentMapping[student.id] = `${student.first_name} ${student.last_name}`;
+        if (student.id && student.name) {
+          map[student.id] = student.name;
+        } else {
+          console.error("Missing fields in student object:", student);
+        }
       });
-      setStudentMap(studentMapping);
+      
+      setStudentMap(map);
+      console.log("Student Map Created:", map); // Debugging
     } catch (err) {
       console.error("Failed to load student map:", err);
     }
   };
-
+  
+  
+  
   const handleApprove = async (requestId) => {
     try {
       console.log(`Approving request ID: ${requestId}`);
-      await approveRequest(requestId);
+      await approveRequest(requestId); // Actualizare status în baza de date
+      // Eliminăm cererea local după aprobare
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request.id !== requestId)
       );
@@ -66,11 +103,12 @@ function HomePage() {
       console.error("Failed to approve request:", err);
     }
   };
-
+  
   const handleReject = async (requestId) => {
     try {
       console.log(`Rejecting request ID: ${requestId}`);
-      await rejectRequest(requestId);
+      await rejectRequest(requestId); // Actualizare status în baza de date
+      // Eliminăm cererea local după respingere
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request.id !== requestId)
       );
@@ -78,6 +116,7 @@ function HomePage() {
       console.error("Failed to reject request:", err);
     }
   };
+  
 
   const role = userDetails.role ? userDetails.role.toLowerCase() : "unknown";
   const name = userDetails.name || "Utilizator necunoscut";
@@ -227,6 +266,7 @@ function HomePage() {
 
       {/* Section for professor requests */}
       {userDetails.role === "professor" && (
+        
         <div className="requests-section">
           <h2>Requests</h2>
           {loadingRequests ? (
@@ -236,13 +276,19 @@ function HomePage() {
           ) : (
             <ul className="request-list">
               {requests.map((request) => (
+                  console.log("Request student ID:", request.student_id),
+                  console.log("Student Map:", studentMap),
+                  console.log("Resolved Student Name:", studentMap[request.student_id]),
+                  
+                  
                 <li key={request.id} className="request-item">
                   <p><strong>Subject:</strong> {request.subject}</p>
                   <p><strong>Date:</strong> {request.requested_date}</p>
                   <p>
-                    <strong>Student:</strong>{" "}
-                    {request.student_name || `ID: ${request.student_id}`} {/* Afișează ID-ul studentului */}
-                  </p>
+  <strong>Student:</strong>{" "}
+  {studentMap[request.student_id] || `ID: ${request.student_id}`}
+</p>
+
                   <p><strong>Status:</strong> {request.status || "Pending"}</p> {/* Afișează statusul */}
                   <div className="request-buttons">
                     <button onClick={() => handleApprove(request.id)}>Approve</button>

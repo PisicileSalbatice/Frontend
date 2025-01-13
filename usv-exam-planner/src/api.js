@@ -208,7 +208,10 @@ export const fetchProfessorRequests = async (professorId) => {
  */
 export const approveRequest = async (requestId) => {
   try {
-    const url = "https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=approved";
+    const email=localStorage.getItem("userdetails").email;
+    const password=localStorage.getItem("userdetails").password;
+
+    const url = `https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=approved&email=${email}&password=${password}`;
     console.log("Approving request with URL:", url);
     const response = await API.put(url); // Trimitere cerere PUT
     console.log("Request approved:", response.data);
@@ -226,7 +229,7 @@ export const approveRequest = async (requestId) => {
  */
 export const rejectRequest = async (requestId) => {
   try {
-    const url = "https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=rejected";
+    const url = `https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=rejected`;
     console.log("Rejecting request with URL:", url);
     const response = await API.put(url); // Trimitere cerere PUT
     console.log("Request rejected:", response.data);
@@ -245,7 +248,7 @@ export const rejectRequest = async (requestId) => {
  */
 export const fetchAllStudents = async () => {
   try {
-    const response = await API.get("/students/");
+    const response = await API.get("https://actively-settling-tortoise.ngrok-free.app/students/");
     console.log("Students fetched:", response.data);
     return response.data;
   } catch (error) {
@@ -253,6 +256,8 @@ export const fetchAllStudents = async () => {
     throw error;
   }
 };
+
+
 
 
 
