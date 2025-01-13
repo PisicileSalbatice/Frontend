@@ -23,9 +23,9 @@ def upgrade() -> None:
     op.add_column('exam_requests', sa.Column('exam_id', sa.Integer(), nullable=True))
     op.create_foreign_key(None, 'exam_requests', 'exams', ['exam_id'], ['id'])
     op.drop_column('exam_requests', 'subject')
-    op.add_column('professors', sa.Column('user_id', sa.Integer(), nullable=True))
+    #op.add_column('professors', sa.Column('user_id', sa.Integer(), nullable=True))
     op.create_foreign_key(None, 'professors', 'users', ['user_id'], ['id'])
-    op.add_column('students', sa.Column('user_id', sa.Integer(), nullable=True))
+    #op.add_column('students', sa.Column('user_id', sa.Integer(), nullable=True))
     op.create_foreign_key(None, 'students', 'users', ['user_id'], ['id'])
     # ### end Alembic commands ###
 

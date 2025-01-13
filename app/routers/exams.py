@@ -149,15 +149,16 @@ def update_exam_request_status(
         raise HTTPException(status_code=403, detail="Invalid email for the current user.")
 
     # Actualizăm statusul cererii
-
     updated_request = crud.update_exam_request_status(db=db, request_id=request_id, status=status)
     if not updated_request:
         raise HTTPException(status_code=404, detail="Exam request not found")
+
     # Trimitem notificarea către student
     student_email = updated_request.student.email
     notifications.notify_exam_request_status_updated(db, request_id, status)
 
     return {"message": f"Status of request {request_id} updated to {status}"}
+
     
 
 

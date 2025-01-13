@@ -68,7 +68,8 @@ class ExamRequest(Base):
     classroom_id = Column(Integer, ForeignKey('classrooms.id'))
     requested_date = Column(Date)
     subject = Column(String)
-
+    status = Column(String, default="pending")
+    
     student = relationship("Student", back_populates="exam_requests")
     professor = relationship("Professor", back_populates="exam_requests")
     classroom = relationship("Classroom", back_populates="exam_requests")

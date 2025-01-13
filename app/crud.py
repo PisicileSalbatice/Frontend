@@ -73,13 +73,27 @@ def get_exam_requests(db: Session, student_id: int = None, professor_id: int = N
     return query.all()
 
 
-def update_exam_request_status(db: Session, request_id: int, status: str) -> ExamRequest:
-    exam_request = db.query(ExamRequest).filter(ExamRequest.id == request_id).first()
-    if exam_request:
-        exam_request.status = status
-        db.commit()
-        db.refresh(exam_request)
+def update_exam_request_status(db: Session, request_id: int, status: str):
+    # Găsim cererea de examen
+    exam_request = db.query(models.ExamRequest).filter(models.ExamRequest.id == request_id).first()
+    if not exam_request:
+        return None
+
+    # Debug înainte de actualizare
+    print(f"Before update: {exam_request.status}")
+
+    # Actualizăm statusul
+    exam_request.status = status
+
+    # Confirmăm modificările în baza de date
+    db.commit()
+    db.refresh(exam_request)  # Actualizăm instanța din baza de date
+
+    # Debug după actualizare
+    print(f"After update: {exam_request.status}")
+
     return exam_request
+
 
 # Fetch all exams registered and managed by a specific professor
 def get_professor_exams(db: Session, professor_id: int) -> List[models.Exam]:

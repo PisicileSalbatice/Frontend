@@ -1,196 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List, Optional
-from app import models, schemas, crud, notifications
+from app import models, schemas
 from app.database import get_db
-from app.routers.auth import get_current_user, authenticate_user
-from app.models import ExamRequest
-from app.notifications import notify_exam_request_created, notify_exam_request_status_updated
-from sqlalchemy.dialects import postgresql
-import logging
-router = APIRouter(prefix="/exams", tags=["exams"])
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler("debug.log"),  # Logare într-un fișier
-        logging.StreamHandler(),          # Logare în consolă
-    ],
-)
-logger = logging.getLogger(__name__)
-# Obține toate examenele
-@router.get("/", response_model=List[schemas.Exam])
-def get_exams(db: Session = Depends(get_db)):
-    return crud.get_exams(db=db)
+from typing import List, Optional
 
-# Creare examen nou
-@router.post("/", response_model=schemas.Exam)
-def create_exam(exam: schemas.ExamCreate, db: Session = Depends(get_db)):
-    return crud.create_exam(db=db, exam=exam)
+router = APIRouter(prefix="/students", tags=["students"])
 
-# Creare cerere de examen
-@router.post("/requests/", response_model=schemas.ExamRequest)
-def create_exam_request(
-    request: schemas.ExamRequestCreate,
-    email: str,
-    password: str,
-    db: Session = Depends(get_db),
-):
-    try:
-        # Obține utilizatorul curent
-        current_user = get_current_user(email, password, db)
+# Obține lista tuturor studenților
+@router.get("/", response_model=List[schemas.Student])
+def get_students(db: Session = Depends(get_db)):
+    students = db.query(models.Student).all()
+    if not students:
+        raise HTTPException(status_code=404, detail="No students found")
+    return students
 
-        # Creează cererea de examen
-        exam_request = ExamRequest.create_request_with_exam(
-            db=db,
-            student_id=request.student_id,
-            professor_id=request.professor_id,
-            classroom_id=request.classroom_id,
-            requested_date=request.requested_date,
-            subject=request.subject,
-        )
+# Obține detaliile unui student pe baza ID-ului
+@router.get("/{student_id}", response_model=schemas.Student)
+def get_student(student_id: int, db: Session = Depends(get_db)):
+    student = db.query(models.Student).filter(models.Student.id == student_id).first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return student
 
-        # Obține detalii despre student
-        student = db.query(models.Student).filter(models.Student.id == request.student_id).first()
-        if not student:
-            raise HTTPException(status_code=404, detail="Student not found")
+# Creează un student nou
+@router.post("/", response_model=schemas.Student)
+def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
+    existing_student = db.query(models.Student).filter(models.Student.email == student.email).first()
+    if existing_student:
+        raise HTTPException(status_code=400, detail="Student with this email already exists")
 
-        response = schemas.ExamRequest(
-            id=exam_request.id,
-            student=schemas.UserDetails(
-                id=student.id,
-                name=f"{student.first_name} {student.last_name}",
-                email=student.email,
-                role="student",
-            ),
-            professor_id=exam_request.professor_id,
-            classroom_id=exam_request.classroom_id,
-            requested_date=exam_request.requested_date,
-            subject=exam_request.subject,
-        )
-
-        # Notificări
-        notify_exam_request_created(db, exam_request.id)
-        return response
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
-
-
-
-
-# Obține cererile de examen
-@router.get("/requests/", response_model=List[schemas.ExamRequest])
-def get_exam_requests(
-    student_id: Optional[int] = None,
-    professor_id: Optional[int] = None,
-    db: Session = Depends(get_db),
-):
-    logger.debug(f"Fetching exam requests for student_id: {student_id}, professor_id: {professor_id}")
-    requests = crud.get_exam_requests(db=db, student_id=student_id, professor_id=professor_id)
-    if not requests:
-        logger.warning(f"No exam requests found for student_id: {student_id} or professor_id: {professor_id}")
-        raise HTTPException(status_code=404, detail="No exam requests found")
-    return requests
-
-
-@router.get("/exams/student/{student_id}", response_model=List[schemas.ExamRequest])
-def get_exams_for_student(student_id: int, db: Session = Depends(get_db)):
-    """
-    Fetch all exam requests for a given student_id.
-    """
-    # Query from the `exam_requests` table
-    exam_requests = db.query(models.ExamRequest).filter(models.ExamRequest.student_id == student_id).all()
-    
-    # Debug log to confirm results
-    logger.debug(f"Exam requests fetched for student_id {student_id}: {exam_requests}")
-
-    # Handle case when no exam requests are found
-    if not exam_requests:
-        raise HTTPException(status_code=404, detail="No exam requests found for the given student ID")
-    
-    return exam_requests
-
-
-
-
-# Actualizează starea cererii de examen
-@router.put("/requests/{request_id}/status")
-def update_exam_request_status(
-    request_id: int,
-    status: str,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    if status not in ["approved", "rejected"]:
-        raise HTTPException(status_code=400, detail="Invalid status value. Use 'approved' or 'rejected'.")
-
-    if current_user.role != "professor":
-        raise HTTPException(status_code=403, detail="Only professors can update the status of exam requests.")
-
-    updated_request = crud.update_exam_request_status(db=db, request_id=request_id, status=status)
-    if not updated_request:
-        raise HTTPException(status_code=404, detail="Exam request not found")
-
-    # Notify student
-    notifications.notify_student_of_status(updated_request.student.email, status)
-    notify_exam_request_status_updated(db, request_id, status)
-
-    logger.info(f"Updated request_id {request_id} to status {status}")
-    return {"message": f"Status of request updated to {status}", "status": status}
-
-
-@router.delete("/requests/{request_id}", status_code=204)
-def delete_exam_request(
-    request_id: int,
-    email: str,
-    password: str,
-    db: Session = Depends(get_db)
-):
-    # Obține profesorul curent
-    user = authenticate_user(email, password, db)
-    if not user:
-        raise HTTPException(status_code=401, detail="Invalid email or password")
-
-    if user.role != "professor":
-        raise HTTPException(status_code=403, detail="Only professors can delete exam requests")
-
-    # Verifică dacă cererea de examen există
-    exam_request = db.query(models.ExamRequest).filter(models.ExamRequest.id == request_id).first()
-    if not exam_request:
-        raise HTTPException(status_code=404, detail="Exam request not found")
-
-    # Verifică dacă profesorul curent este asociat cu cererea de examen
-    if exam_request.professor_id != user.id:
-        raise HTTPException(status_code=403, detail="You do not have permission to delete this request")
-
-    # Șterge cererea din baza de date
-    db.delete(exam_request)
+    new_student = models.Student(**student.dict())
+    db.add(new_student)
     db.commit()
-
-    return {"detail": "Exam request deleted successfully"}
-
-
-@router.get("/user/details", response_model=schemas.UserDetails)
-def get_user_details(email: str, db: Session = Depends(get_db)):
-    """
-    Returnează detaliile utilizatorului (student sau profesor) pe baza email-ului.
-    """
-    student = db.query(models.Student).filter(models.Student.email == email).first()
-    if student:
-        return {
-            "id": student.id,
-            "name": f"{student.first_name} {student.last_name}",
-            "email": student.email,
-            "role": "student",
-        }
-
-    professor = db.query(models.Professor).filter(models.Professor.email == email).first()
-    if professor:
-        return {
-            "id": professor.id,
-            "name": f"{professor.first_name} {professor.last_name}",
-            "email": professor.email,
-            "role": "professor",
-        }
-
-    raise HTTPException(status_code=404, detail="User not found")
+    db.refresh(new_student)
+    return new_student
