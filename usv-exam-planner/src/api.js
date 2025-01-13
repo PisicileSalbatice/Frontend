@@ -66,18 +66,24 @@ export const getuserdetails = async (email) => {
  * @param {string} password
  * @returns {Promise} Lista de examene
  */
-export const fetchStudentExams = async (email, password) => {
+export const fetchStudentExams = async (studentId) => {
   try {
-    const response = await API.get("/students/exams", {
-      params: { email, password },
-    });
-    console.log("Student exams:", response.data);
-    return response.data;
+    const response = await fetch(`https://actively-settling-tortoise.ngrok-free.app/exams/exams/student/${studentId}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch exams: ${response.status}`);
+    }
+    const data = await response.json(); // Parsează răspunsul
+    console.log("Student exams fetched:", data);
+    return data;
   } catch (error) {
-    console.error("Failed to fetch exams:", error.response?.data || error.message);
+    console.error("Failed to fetch student exams:", error.message);
     throw error;
   }
 };
+
+
+
+
 
 /**
  * Creare cerere de examen
@@ -171,14 +177,19 @@ export const fetchProfessors = async () => {
  */
 export const fetchExamsForUser = async (studentId) => {
   try {
-    const response = await API.get("https://actively-settling-tortoise.ngrok-free.app/exams/exams/student/${student_id}");
-    console.log("Exams fetched:", response.data);
-    return response.data;
+      const response = await API.get(`/exams/exams/student/${studentId}`);
+      console.log("Exams fetched:", response.data);
+      return response.data;
   } catch (error) {
-    console.error("Failed to fetch user exams:", error.response?.data || error.message);
-    throw error;
+      console.error("Failed to fetch user exams:", error.response?.data || error.message);
+      throw error;
   }
 };
+
+
+
+
+
 
 
 

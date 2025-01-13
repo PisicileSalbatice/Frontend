@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchStudentExams, fetchProfessors, fetchAllStudents } from "../api";
+import { fetchStudentExams, fetchProfessors, fetchAllStudents, getuserdetails } from "../api";
 import "../styles/MyExamsPage.css";
 
 function MyExamsPage() {
@@ -22,10 +22,9 @@ function MyExamsPage() {
 
         let examsData = [];
         if (userDetails.role === "student") {
-          const email = userDetails.email;
-          const password = "default_password";
-
-          examsData = await fetchStudentExams(email, password);
+          const userDetailsFromBackend = await getuserdetails(userDetails.email);
+          const studentId = userDetailsFromBackend.id;
+          examsData = await fetchStudentExams(studentId);
         } else if (userDetails.role === "professor") {
           examsData = JSON.parse(localStorage.getItem("approved-exams")) || [];
         }
@@ -107,5 +106,4 @@ function MyExamsPage() {
     </div>
   );
 }
-
 export default MyExamsPage;
