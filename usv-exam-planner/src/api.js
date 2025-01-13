@@ -208,12 +208,21 @@ export const fetchProfessorRequests = async (professorId) => {
  */
 export const approveRequest = async (requestId) => {
   try {
-    const email=localStorage.getItem("userdetails").email;
-    const password=localStorage.getItem("userdetails").password;
+    // Obține datele utilizatorului din localStorage
+    const userDetails = JSON.parse(localStorage.getItem("userdetails"));
+    if (!userDetails || !userDetails.email || !userDetails.password) {
+      throw new Error("User details are missing");
+    }
+
+    const email = userDetails.email;
+    const password = userDetails.password;
 
     const url = `https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=approved&email=${email}&password=${password}`;
     console.log("Approving request with URL:", url);
-    const response = await API.put(url); // Trimitere cerere PUT
+    console.log("password: ", userDetails.password);
+
+    // Trimitere cerere PUT
+    const response = await API.put(url);
     console.log("Request approved:", response.data);
     return response.data;
   } catch (error) {
@@ -222,6 +231,7 @@ export const approveRequest = async (requestId) => {
   }
 };
 
+
 /**
  * Reject an exam request
  * @param {number} requestId - ID-ul cererii
@@ -229,8 +239,13 @@ export const approveRequest = async (requestId) => {
  */
 export const rejectRequest = async (requestId) => {
   try {
-    const url = `https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=rejected`;
+    // Preluăm email-ul și parola din localStorage
+    const email = JSON.parse(localStorage.getItem("userdetails")).email;
+    const password = JSON.parse(localStorage.getItem("userdetails")).password;
+
+    const url = `https://actively-settling-tortoise.ngrok-free.app/exams/requests/${requestId}/status?status=rejected&email=${email}&password=${password}`;
     console.log("Rejecting request with URL:", url);
+
     const response = await API.put(url); // Trimitere cerere PUT
     console.log("Request rejected:", response.data);
     return response.data;
@@ -239,6 +254,7 @@ export const rejectRequest = async (requestId) => {
     throw error;
   }
 };
+
 
 
 
