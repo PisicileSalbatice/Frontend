@@ -27,7 +27,6 @@ function HomePage() {
    
 
    useEffect(() => {
-    console.log("Student Map:", studentMap);
   }, [studentMap]);
 
   
@@ -35,8 +34,6 @@ function HomePage() {
 
    useEffect(() => {
     const storedUser = localStorage.getItem("userdetails");
-    console.log("Hai la balci:")
-    console.log(localStorage);
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserDetails(parsedUser);
@@ -54,8 +51,10 @@ function HomePage() {
     setLoadingRequests(true);
     try {
       const data = await fetchProfessorRequests(professorId);
-      console.log("Requests after fetching:", data);
-      setRequests(data);
+      // Filtrează cererile pentru a exclude cele cu status "approved" sau "rejected"
+      const filteredRequests = data.filter(request => request.status === "pending");
+      console.log("Requests after filtering:", filteredRequests);
+      setRequests(filteredRequests);
     } catch (err) {
       console.error("Failed to fetch requests:", err);
     } finally {
@@ -63,15 +62,14 @@ function HomePage() {
     }
   };
   
+  
 
   const loadStudentMap = async () => {
     try {
       const response = await fetch("https://actively-settling-tortoise.ngrok-free.app/students");
       const text = await response.text();
-      console.log("Raw Response:", text); // Debugging
       
       const students = JSON.parse(text);
-      console.log("Parsed Students:", students); // Verificăm conversia la JSON
   
       const map = {};
       students.forEach((student) => {
@@ -83,7 +81,6 @@ function HomePage() {
       });
       
       setStudentMap(map);
-      console.log("Student Map Created:", map); // Debugging
     } catch (err) {
       console.error("Failed to load student map:", err);
     }
@@ -94,15 +91,37 @@ function HomePage() {
   const handleApprove = async (requestId) => {
     try {
       console.log(`Approving request ID: ${requestId}`);
-      await approveRequest(requestId); // Actualizare status în baza de date
+  
+      // Găsim request-ul în lista curentă
+      const requestToApprove = requests.find((request) => request.id === requestId);
+  
+      if (!requestToApprove) {
+        console.error(`Request ID ${requestId} not found.`);
+        return;
+      }
+  
+      // Actualizare status în baza de date
+      await approveRequest(requestId);
+  
+      // Salvăm examenul aprobat în localStorage pentru profesor
+      const approvedExams = JSON.parse(localStorage.getItem("approved-exams")) || [];
+      const updatedApprovedExams = [
+        ...approvedExams,
+        { ...requestToApprove, status: "approved" },
+      ];
+      localStorage.setItem("approved-exams", JSON.stringify(updatedApprovedExams));
+  
       // Eliminăm cererea local după aprobare
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request.id !== requestId)
       );
+  
+      console.log(`Request ${requestId} approved and saved to approved-exams.`);
     } catch (err) {
       console.error("Failed to approve request:", err);
     }
   };
+  
   
   const handleReject = async (requestId) => {
     try {
@@ -276,9 +295,6 @@ function HomePage() {
           ) : (
             <ul className="request-list">
               {requests.map((request) => (
-                  console.log("Request student ID:", request.student_id),
-                  console.log("Student Map:", studentMap),
-                  console.log("Resolved Student Name:", studentMap[request.student_id]),
                   
                   
                 <li key={request.id} className="request-item">
